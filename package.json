@@ -1,0 +1,24 @@
+{
+    "name": "postcss-nested",
+    "version": "0.0.0",
+    "description": "PostCSS plugin for Sass-like variables",
+    "keywords": ["postcss", "sass", "css", "variables", "vars"],
+    "author": "Andrey Sitnik <andrey@sitnik.ru>",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url":  "https://github.com/postcss/postcss-simple-vars.git"
+    },
+    "devDependencies": {
+        "jshint-stylish": "1.0.0",
+        "gulp-jshint":    "1.9.0",
+        "gulp-mocha":     "2.0.0",
+        "postcss":        "4.0.3",
+        "mocha":          "2.1.0",
+        "chai":           "1.10.0",
+        "gulp":           "3.8.10"
+    },
+    "scripts": {
+        "test": "gulp"
+    }
+}
