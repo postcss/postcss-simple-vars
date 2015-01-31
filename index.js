@@ -4,17 +4,26 @@ var definition = function (variables, node) {
     node.removeSelf();
 };
 
+var variable = function (variables, node, name, str, silent) {
+    if ( variables[name] ) {
+        return variables[name];
+    } else if ( silent ) {
+        return str;
+    } else {
+        throw node.error('Undefined variable ' + str);
+    }
+};
+
 var declValue = function (variables, node, silent) {
-    node.value = node.value.replace(/\$[\w\d-]+/, function (str) {
-        var name = str.slice(1);
-        if ( variables[name] ) {
-            return variables[name];
-        } else if ( silent ) {
-            return str;
-        } else {
-            throw node.error('Undefined variable ' + str);
-        }
-    });
+    node.value = node.value
+        .replace(/\$[\w\d-]+/, function (str) {
+            var name = str.slice(1);
+            return variable(variables, node, name, str, silent);
+        })
+        .replace(/\$\(\s*[\w\d-]+\s*\)/, function (str) {
+            var name = str.slice(2, -1).trim();
+            return variable(variables, node, name, str, silent);
+        });
 };
 
 module.exports = function (opts) {

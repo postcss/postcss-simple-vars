@@ -10,8 +10,12 @@ var test = function (input, output, opts) {
 describe('postcss-simple-vars', function () {
 
     it('replaces variables in values', function () {
-        test('$size: 10px;\n' + 'a { width: $size; height: $size; }',
+        test('$size: 10px;\na { width: $size; height: $size; }',
              'a { width: 10px; height: 10px; }');
+    });
+
+    it('has second syntax for varibles', function () {
+        test('$size: 10; a { width: $(size)px }', 'a { width: 10px }');
     });
 
     it('overrides variables', function () {
