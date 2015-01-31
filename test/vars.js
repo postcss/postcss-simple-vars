@@ -14,6 +14,10 @@ describe('postcss-simple-vars', function () {
              'a { width: 10px; height: 10px; }');
     });
 
+    it('needs space before variable', function () {
+        test('$size: 10px; a { width: one-$size }', 'a { width: one-$size }');
+    });
+
     it('has second syntax for varibles', function () {
         test('$size: 10; a { width: $(size)px }', 'a { width: 10px }');
     });

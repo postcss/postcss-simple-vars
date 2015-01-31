@@ -16,8 +16,8 @@ var variable = function (variables, node, name, str, silent) {
 
 var declValue = function (variables, node, silent) {
     node.value = node.value
-        .replace(/\$[\w\d-]+/, function (str) {
-            var name = str.slice(1);
+        .replace(/(^|\s)\$[\w\d-]+/, function (str) {
+            var name = str.trim().slice(1);
             return variable(variables, node, name, str, silent);
         })
         .replace(/\$\(\s*[\w\d-]+\s*\)/, function (str) {
