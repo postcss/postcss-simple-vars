@@ -22,6 +22,10 @@ describe('postcss-simple-vars', function () {
         test('$size: 10; a { width: $(size)px }', 'a { width: 10px }');
     });
 
+    it('replaces variables in selector', function () {
+        test('$name: a; $name $(name)b { }', 'a ab { }');
+    });
+
     it('overrides variables', function () {
         test('$var: 1; a{ one: $var } b{ $var: 2; two: $var } c{ two: $var }',
              'a{ one: 1 } b{ two: 2 } c{ two: 2 }');
