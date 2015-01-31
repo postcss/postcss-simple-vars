@@ -5,10 +5,19 @@ var definition = function (variables, node) {
 };
 
 var variable = function (variables, node, str, name, opts) {
-    if ( variables[name] ) {
+    if ( opts.only ) {
+        if ( opts.only[name] ) {
+            return opts.only[name];
+        } else {
+            return str;
+        }
+
+    } if ( variables[name] ) {
         return variables[name];
+
     } else if ( opts.silent ) {
         return str;
+
     } else {
         throw node.error('Undefined variable ' + str);
     }
@@ -60,7 +69,7 @@ module.exports = function (opts) {
 
             if ( node.type == 'decl' ) {
                 if ( node.prop[0] == '$' ) {
-                    definition(variables, node);
+                    if ( !opts.only ) definition(variables, node);
                 } else if ( node.value.indexOf('$') != -1 ) {
                     declValue(variables, node, opts);
                 }
