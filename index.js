@@ -4,11 +4,13 @@ var definition = function (variables, node) {
     node.removeSelf();
 };
 
-var declValue = function (variables, node) {
+var declValue = function (variables, node, silent) {
     node.value = node.value.replace(/\$[\w\d-]+/, function (str) {
         var name = str.slice(1);
         if ( variables[name] ) {
             return variables[name];
+        } else if ( silent ) {
+            return str;
         } else {
             throw node.error('Undefined variable ' + str);
         }
@@ -29,7 +31,7 @@ module.exports = function (opts) {
                 } else {
 
                     if ( node.value.indexOf('$') != -1 ) {
-                        declValue(variables, node);
+                        declValue(variables, node, opts.silent);
                     }
                 }
 

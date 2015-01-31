@@ -3,8 +3,8 @@ var expect  = require('chai').expect;
 
 var vars = require('../');
 
-var test = function (input, output) {
-    expect(postcss(vars).process(input).css).to.eql(output);
+var test = function (input, output, opts) {
+    expect(postcss(vars(opts)).process(input).css).to.eql(output);
 };
 
 describe('postcss-simple-vars', function () {
@@ -23,6 +23,10 @@ describe('postcss-simple-vars', function () {
         expect(function () {
             test('a { width: $size }');
         }).to.throw('<css input>:1:5: Undefined variable $size');
+    });
+
+    it('allows to silent errors', function () {
+        test('a { width: $size }', 'a { width: $size }', { silent: true });
     });
 
 });
