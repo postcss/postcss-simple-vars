@@ -6,13 +6,13 @@ var definition = function (variables, node) {
 
 var variable = function (variables, node, str, name, opts) {
     if ( opts.only ) {
-        if ( opts.only[name] ) {
+        if ( typeof(opts.only[name]) != 'undefined' ) {
             return opts.only[name];
         } else {
             return str;
         }
 
-    } if ( variables[name] ) {
+    } if ( typeof(variables[name]) != 'undefined' ) {
         return variables[name];
 
     } else if ( opts.silent ) {

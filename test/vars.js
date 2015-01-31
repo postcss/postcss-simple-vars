@@ -63,4 +63,8 @@ describe('postcss-simple-vars', function () {
              { only: { one: 1 } });
     });
 
+    it('works with false value', function () {
+        test('a { zero: $zero }', 'a { zero: 0 }', { variables: { zero: 0 } });
+    });
+
 });
