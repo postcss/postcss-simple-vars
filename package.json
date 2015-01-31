@@ -1,7 +1,7 @@
 {
     "name": "postcss-nested",
     "version": "0.0.0",
-    "description": "PostCSS plugin for variables in CSS like in Sass",
+    "description": "PostCSS plugin for Sass-like variables",
     "keywords": ["postcss", "sass", "css", "variables", "vars"],
     "author": "Andrey Sitnik <andrey@sitnik.ru>",
     "license": "MIT",

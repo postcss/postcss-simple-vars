@@ -2,7 +2,7 @@
 
 <img align="right" width="95" height="95" src="http://postcss.github.io/postcss/logo.svg" title="Philosopher’s stone, logo of PostCSS">
 
-[PostCSS] plugin for variables in CSS like in Sass.
+[PostCSS] plugin for Sass-like variables.
 
 You can use variables inside values, selectors and at-rule’s parameters.
 
@@ -36,7 +36,7 @@ $column: 200px
 
 ## Interpolation
 
-There is special syntax if you want to use variable inside CSS word:
+There is special syntax if you want to use variable inside CSS words:
 
 ```css
 $prefix: my-company-widget
@@ -93,7 +93,7 @@ Call plugin function to set options:
 Set default variables. It is useful to store colors or other constants
 in common file:
 
-```
+```js
 # config/colors.js
 
 module.exports = {
@@ -114,10 +114,9 @@ gulp.task('css', function () {
 
 #### `silent`
 
-Do not throw a error on unknown variable and left them in CSS.
-Default is `false`.
+Left unknown variables in CSS and do not throw a error. Default is `false`.
 
 #### `only`
 
-Set value only variables from this object. Other variables will not be changed.
-It is useful for PostCSS plugin developers.
+Set value only for variables from this object.
+Other variables will not be changed. It is useful for PostCSS plugin developers.
