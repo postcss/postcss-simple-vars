@@ -15,14 +15,14 @@ var variable = function (variables, node, str, name, silent) {
 };
 
 var simpleSyntax = function (variables, node, str, silent) {
-    return str.replace(/(^|\s)\$[\w\d-]+/, function (str) {
+    return str.replace(/(^|\s)\$[\w\d-_]+/, function (str) {
         var name = str.trim().slice(1);
         return variable(variables, node, str, name, silent);
     });
 };
 
 var inStringSyntax = function (variables, node, str, silent) {
-    return str.replace(/\$\(\s*[\w\d-]+\s*\)/, function (str) {
+    return str.replace(/\$\(\s*[\w\d-_]+\s*\)/, function (str) {
         var name = str.slice(2, -1).trim();
         return variable(variables, node, str, name, silent);
     });

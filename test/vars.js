@@ -10,8 +10,12 @@ var test = function (input, output, opts) {
 describe('postcss-simple-vars', function () {
 
     it('replaces variables in values', function () {
-        test('$size: 10px;\na { width: $size; height: $size; }',
-             'a { width: 10px; height: 10px; }');
+        test('$size: 10px;\na { width: $size; height: $size }',
+             'a { width: 10px; height: 10px }');
+    });
+
+    it('allows dashes and digits in variable name', function () {
+        test('$a-b_10: 1;\na { one: $a-b_10 a$(a-b_10) }', 'a { one: 1 a1 }');
     });
 
     it('needs space before variable', function () {
