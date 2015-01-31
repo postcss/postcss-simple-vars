@@ -2,4 +2,122 @@
 
 <img align="right" width="95" height="95" src="http://postcss.github.io/postcss/logo.svg" title="Philosopher’s stone, logo of PostCSS">
 
-PostCSS plugin for Sass-like variables.
+[PostCSS] plugin for variables in CSS like in Sass.
+
+You can use variables inside values, selectors and at-rule’s parameters.
+
+If you want be closer to W3C spec, you should use [postcss-custom-properties] plugin.
+
+```css
+$blue: #056ef0
+$column: 200px
+
+.menu {
+    width: calc(4 * $column);
+}
+.menu_link {
+    background: $blue;
+    width: $column;
+}
+```
+
+```css
+.menu {
+    width: calc(4 * 200px);
+}
+.menu_link {
+    background: #056ef0;
+    width: 200px;
+}
+```
+
+[PostCSS]: https://github.com/postcss/postcss
+[postcss-custom-properties]: https://github.com/postcss/postcss-custom-properties
+
+## Interpolation
+
+There is special syntax if you want to use variable inside CSS word:
+
+```css
+$prefix: my-company-widget
+
+$prefix { }
+$(prefix)_button { }
+```
+
+## Usage
+
+See [PostCSS] docs for source map options and other special cases.
+
+[PostCSS]: https://github.com/postcss/postcss
+
+### Grunt
+
+```js
+grunt.initConfig({
+    postcss: {
+        options: {
+            processors: [ require('postcss-simple-vars').postcss ]
+        },
+        dist: {
+            src: 'css/*.css'
+        }
+    }
+});
+
+grunt.loadNpmTasks('grunt-postcss');
+```
+
+### Gulp
+
+```js
+var postcss = require('gulp-postcss');
+
+gulp.task('css', function () {
+     return gulp.src('./src/*.css')
+        .pipe(postcss([ require('postcss-simple-vars') ]))
+        .pipe(gulp.dest('./dest'));
+});
+```
+
+### Options
+
+Call plugin function to set options:
+
+```js
+.pipe(postcss([ require('postcss-simple-vars')({ silent: true }) ]))
+```
+
+#### `variables`
+
+Set default variables. It is useful to store colors or other constants
+in common file:
+
+```
+# config/colors.js
+
+module.exports = {
+    blue: '#056ef0'
+}
+
+# gulpfile.js
+
+var colors = require('./config/colors');
+var vars   = require('postcss-simple-vars')
+
+gulp.task('css', function () {
+     return gulp.src('./src/*.css')
+        .pipe(postcss([ vars({ variables: colors }) ]))
+        .pipe(gulp.dest('./dest'));
+});
+```
+
+#### `silent`
+
+Do not throw a error on unknown variable and left them in CSS.
+Default is `false`.
+
+#### `only`
+
+Set value only variables from this object. Other variables will not be changed.
+It is useful for PostCSS plugin developers.
