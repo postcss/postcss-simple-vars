@@ -42,6 +42,10 @@ var ruleSelector = function (variables, node, silent) {
     node.selector = bothSyntax(variables, node, node.selector, silent);
 };
 
+var atruleParams = function (variables, node, silent) {
+    node.params = bothSyntax(variables, node, node.params, silent);
+};
+
 module.exports = function (opts) {
     if ( typeof(opts) == 'undefined' ) opts = { };
 
@@ -60,6 +64,11 @@ module.exports = function (opts) {
             } else if ( node.type == 'rule' ) {
                 if ( node.selector.indexOf('$') != -1 ) {
                     ruleSelector(variables, node, opts.silent);
+                }
+
+            } else if ( node.type == 'atrule' ) {
+                if ( node.params && node.params.indexOf('$(') != -1 ) {
+                    atruleParams(variables, node, opts.silent);
                 }
             }
 

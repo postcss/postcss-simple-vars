@@ -26,6 +26,14 @@ describe('postcss-simple-vars', function () {
         test('$name: a; $name $(name)b { }', 'a ab { }');
     });
 
+    it('replaces variables in at-rule params', function () {
+        test('$name: a; @atrule $name $(name)b { }', '@atrule a ab { }');
+    });
+
+    it('parses at-rule without params', function () {
+        test('@atrule{}', '@atrule{}');
+    });
+
     it('overrides variables', function () {
         test('$var: 1; a{ one: $var } b{ $var: 2; two: $var } c{ two: $var }',
              'a{ one: 1 } b{ two: 2 } c{ two: 2 }');
