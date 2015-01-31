@@ -4,46 +4,46 @@ var definition = function (variables, node) {
     node.removeSelf();
 };
 
-var variable = function (variables, node, str, name, silent) {
+var variable = function (variables, node, str, name, opts) {
     if ( variables[name] ) {
         return variables[name];
-    } else if ( silent ) {
+    } else if ( opts.silent ) {
         return str;
     } else {
         throw node.error('Undefined variable ' + str);
     }
 };
 
-var simpleSyntax = function (variables, node, str, silent) {
+var simpleSyntax = function (variables, node, str, opts) {
     return str.replace(/(^|\s)\$[\w\d-_]+/, function (str) {
         var name = str.trim().slice(1);
-        return variable(variables, node, str, name, silent);
+        return variable(variables, node, str, name, opts);
     });
 };
 
-var inStringSyntax = function (variables, node, str, silent) {
+var inStringSyntax = function (variables, node, str, opts) {
     return str.replace(/\$\(\s*[\w\d-_]+\s*\)/, function (str) {
         var name = str.slice(2, -1).trim();
-        return variable(variables, node, str, name, silent);
+        return variable(variables, node, str, name, opts);
     });
 };
 
-var bothSyntax = function (variables, node, str, silent) {
-    str = simpleSyntax(variables, node, str, silent);
-    str = inStringSyntax(variables, node, str, silent);
+var bothSyntaxes = function (variables, node, str, opts) {
+    str = simpleSyntax(variables, node, str, opts);
+    str = inStringSyntax(variables, node, str, opts);
     return str;
 };
 
-var declValue = function (variables, node, silent) {
-    node.value = bothSyntax(variables, node, node.value, silent);
+var declValue = function (variables, node, opts) {
+    node.value = bothSyntaxes(variables, node, node.value, opts);
 };
 
-var ruleSelector = function (variables, node, silent) {
-    node.selector = bothSyntax(variables, node, node.selector, silent);
+var ruleSelector = function (variables, node, opts) {
+    node.selector = bothSyntaxes(variables, node, node.selector, opts);
 };
 
-var atruleParams = function (variables, node, silent) {
-    node.params = bothSyntax(variables, node, node.params, silent);
+var atruleParams = function (variables, node, opts) {
+    node.params = bothSyntaxes(variables, node, node.params, opts);
 };
 
 module.exports = function (opts) {
@@ -62,17 +62,17 @@ module.exports = function (opts) {
                 if ( node.prop[0] == '$' ) {
                     definition(variables, node);
                 } else if ( node.value.indexOf('$') != -1 ) {
-                    declValue(variables, node, opts.silent);
+                    declValue(variables, node, opts);
                 }
 
             } else if ( node.type == 'rule' ) {
                 if ( node.selector.indexOf('$') != -1 ) {
-                    ruleSelector(variables, node, opts.silent);
+                    ruleSelector(variables, node, opts);
                 }
 
             } else if ( node.type == 'atrule' ) {
                 if ( node.params && node.params.indexOf('$(') != -1 ) {
-                    atruleParams(variables, node, opts.silent);
+                    atruleParams(variables, node, opts);
                 }
             }
 
