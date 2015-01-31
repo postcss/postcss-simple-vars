@@ -119,4 +119,4 @@ Left unknown variables in CSS and do not throw a error. Default is `false`.
 #### `only`
 
 Set value only for variables from this object.
-Other variables will not be changed. It is useful for PostCSS plugin developers.
+Other variables will not be changed. It is useful for PostCSS plugin developers.
