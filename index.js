@@ -51,6 +51,10 @@ module.exports = function (opts) {
 
     var variables = { };
 
+    if ( typeof(opts.variables) == 'object' ) {
+        for ( var i in opts.variables ) variables[i] = opts.variables[i];
+    }
+
     return function (css) {
         css.eachInside(function (node) {
 

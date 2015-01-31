@@ -53,4 +53,8 @@ describe('postcss-simple-vars', function () {
         test('a { width: $size }', 'a { width: $size }', { silent: true });
     });
 
+    it('gets variables from options', function () {
+        test('a { width: $one }', 'a { width: 1 }', { variables: { one: 1 } });
+    });
+
 });
