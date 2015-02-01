@@ -94,13 +94,13 @@ Set default variables. It is useful to store colors or other constants
 in common file:
 
 ```js
-# config/colors.js
+// config/colors.js
 
 module.exports = {
     blue: '#056ef0'
 }
 
-# gulpfile.js
+// gulpfile.js
 
 var colors = require('./config/colors');
 var vars   = require('postcss-simple-vars')
