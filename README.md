@@ -80,7 +80,7 @@ gulp.task('css', function () {
 });
 ```
 
-### Options
+## Options
 
 Call plugin function to set options:
 
@@ -88,7 +88,7 @@ Call plugin function to set options:
 .pipe(postcss([ require('postcss-simple-vars')({ silent: true }) ]))
 ```
 
-#### `variables`
+### `variables`
 
 Set default variables. It is useful to store colors or other constants
 in common file:
@@ -112,11 +112,11 @@ gulp.task('css', function () {
 });
 ```
 
-#### `silent`
+### `silent`
 
 Left unknown variables in CSS and do not throw a error. Default is `false`.
 
-#### `only`
+### `only`
 
 Set value only for variables from this object.
 Other variables will not be changed. It is useful for PostCSS plugin developers.
