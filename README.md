@@ -47,38 +47,21 @@ $(prefix)_button { }
 
 ## Usage
 
-See [PostCSS] docs for source map options and other special cases.
-
-[PostCSS]: https://github.com/postcss/postcss
-
-### Grunt
+Without options:
 
 ```js
-grunt.initConfig({
-    postcss: {
-        options: {
-            processors: [ require('postcss-simple-vars').postcss ]
-        },
-        dist: {
-            src: 'css/*.css'
-        }
-    }
-});
-
-grunt.loadNpmTasks('grunt-postcss');
+postcss([ require('postcss-simple-vars') ])
 ```
 
-### Gulp
+With options:
 
 ```js
-var postcss = require('gulp-postcss');
-
-gulp.task('css', function () {
-     return gulp.src('./src/*.css')
-        .pipe(postcss([ require('postcss-simple-vars') ]))
-        .pipe(gulp.dest('./dest'));
-});
+postcss([
+    require('postcss-simple-vars')({ variables: require('./constants') })
+])
 ```
+
+See [PostCSS] docs for examples for your environment.
 
 ## Options
 
