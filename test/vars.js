@@ -26,6 +26,10 @@ describe('postcss-simple-vars', function () {
         test('a{ a: 1 $a }', 'a{ a: 1 1 }', { variables: { a: 1 } });
     });
 
+    it('allows to use in negative numbers', function () {
+        test('a{ a: -$a }', 'a{ a: -1 }', { variables: { a: 1 } });
+    });
+
     it('has second syntax for varibles', function () {
         test('$size: 10; a { width: $(size)px }', 'a { width: 10px }');
     });
