@@ -24,15 +24,13 @@ var variable = function (variables, node, str, name, opts) {
 };
 
 var simpleSyntax = function (variables, node, str, opts) {
-    return str.replace(/(^|\s)\$[\w\d-_]+/, function (str) {
-        var name = str.trim().slice(1);
-        return variable(variables, node, str, name, opts);
+    return str.replace(/(^|\s)\$([\w\d-_]+)/g, function (_, before, name) {
+        return before + variable(variables, node, str, name, opts);
     });
 };
 
 var inStringSyntax = function (variables, node, str, opts) {
-    return str.replace(/\$\(\s*[\w\d-_]+\s*\)/, function (str) {
-        var name = str.slice(2, -1).trim();
+    return str.replace(/\$\(\s*([\w\d-_]+)\s*\)/g, function (_, name) {
         return variable(variables, node, str, name, opts);
     });
 };

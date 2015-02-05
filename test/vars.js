@@ -67,4 +67,8 @@ describe('postcss-simple-vars', function () {
         test('a { zero: $zero }', 'a { zero: 0 }', { variables: { zero: 0 } });
     });
 
+    it('do not remove first symbol', function () {
+        test('a { a: 1 $a }', 'a { a: 1 1 }', { variables: { a: 1 } });
+    });
+
 });
