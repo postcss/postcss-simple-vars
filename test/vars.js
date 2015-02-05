@@ -30,6 +30,10 @@ describe('postcss-simple-vars', function () {
         test('a{ a: -$a }', 'a{ a: -1 }', { variables: { a: 1 } });
     });
 
+    it('replaces multiple variables', function () {
+        test('a{ a: $a $a }', 'a{ a: 1 1 }', { variables: { a: 1 } });
+    });
+
     it('has second syntax for varibles', function () {
         test('$size: 10; a { width: $(size)px }', 'a { width: 10px }');
     });
