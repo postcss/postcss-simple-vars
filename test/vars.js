@@ -10,16 +10,20 @@ var test = function (input, output, opts) {
 describe('postcss-simple-vars', function () {
 
     it('replaces variables in values', function () {
-        test('$size: 10px;\na { width: $size; height: $size }',
-             'a { width: 10px; height: 10px }');
+        test('$size: 10px;\na{ width: $size; height: $size }',
+             'a{ width: 10px; height: 10px }');
     });
 
     it('allows dashes and digits in variable name', function () {
-        test('$a-b_10: 1;\na { one: $a-b_10 a$(a-b_10) }', 'a { one: 1 a1 }');
+        test('$a-b_10: 1;\na{ one: $a-b_10 a$(a-b_10) }', 'a{ one: 1 a1 }');
     });
 
     it('needs space before variable', function () {
-        test('$size: 10px; a { width: one-$size }', 'a { width: one-$size }');
+        test('$size: 10px; a { width: one$size }', 'a { width: one$size }');
+    });
+
+    it('does not remove first symbol', function () {
+        test('a{ a: 1 $a }', 'a{ a: 1 1 }', { variables: { a: 1 } });
     });
 
     it('has second syntax for varibles', function () {
@@ -45,30 +49,26 @@ describe('postcss-simple-vars', function () {
 
     it('throws an error on unknown variable', function () {
         expect(function () {
-            test('a { width: $size }');
-        }).to.throw('<css input>:1:5: Undefined variable $size');
+            test('a{ width: $size }');
+        }).to.throw('<css input>:1:4: Undefined variable $size');
     });
 
     it('allows to silent errors', function () {
-        test('a { width: $size }', 'a { width: $size }', { silent: true });
+        test('a{ width: $size }', 'a{ width: $size }', { silent: true });
     });
 
     it('gets variables from options', function () {
-        test('a { width: $one }', 'a { width: 1 }', { variables: { one: 1 } });
+        test('a{ width: $one }', 'a{ width: 1 }', { variables: { one: 1 } });
     });
 
     it('cans get variables only from option', function () {
-        test('$one: 2; $two: 2; a { one: $one }',
-             '$one: 2; $two: 2; a { one: 1 }',
+        test('$one: 2; $two: 2; a{ one: $one }',
+             '$one: 2; $two: 2; a{ one: 1 }',
              { only: { one: 1 } });
     });
 
     it('works with false value', function () {
-        test('a { zero: $zero }', 'a { zero: 0 }', { variables: { zero: 0 } });
-    });
-
-    it('do not remove first symbol', function () {
-        test('a { a: 1 $a }', 'a { a: 1 1 }', { variables: { a: 1 } });
+        test('a{ zero: $zero }', 'a{ zero: 0 }', { variables: { zero: 0 } });
     });
 
 });
