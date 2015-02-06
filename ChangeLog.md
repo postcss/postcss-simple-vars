@@ -1,3 +1,6 @@
+## 0.2.3
+* Fix extra space on variables ignoring.
+
 ## 0.2.2
 * Fix undefined variable error message.
 
