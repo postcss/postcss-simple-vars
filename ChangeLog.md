@@ -1,3 +1,6 @@
+## 0.2.2
+* Fix undefined variable error message.
+
 ## 0.2.1
 * Fix look-behind regexp in simple syntax.
 
