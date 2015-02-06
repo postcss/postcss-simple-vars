@@ -70,8 +70,8 @@ describe('postcss-simple-vars', function () {
     });
 
     it('cans get variables only from option', function () {
-        test('$one: 2; $two: 2; a{ one: $one }',
-             '$one: 2; $two: 2; a{ one: 1 }',
+        test('$one: 2; $two: 2; a{ one: $one $two }',
+             '$one: 2; $two: 2; a{ one: 1 $two }',
              { only: { one: 1 } });
     });
 

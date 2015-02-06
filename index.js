@@ -24,8 +24,8 @@ var variable = function (variables, node, str, name, opts) {
 };
 
 var simpleSyntax = function (variables, node, str, opts) {
-    return str.replace(/(^|[^\w])\$([\w\d-_]+)/g, function (all, before, name) {
-        return before + variable(variables, node, all, name, opts);
+    return str.replace(/(^|[^\w])\$([\w\d-_]+)/g, function (_, before, name) {
+        return before + variable(variables, node, '$' + name, name, opts);
     });
 };
 
