@@ -19,19 +19,19 @@ var variable = function (variables, node, str, name, opts) {
         return str;
 
     } else {
-        throw node.error('Undefined variable ' + str);
+        throw node.error('Undefined variable $' + name);
     }
 };
 
 var simpleSyntax = function (variables, node, str, opts) {
-    return str.replace(/(^|[^\w])\$([\w\d-_]+)/g, function (_, before, name) {
-        return before + variable(variables, node, str, name, opts);
+    return str.replace(/(^|[^\w])\$([\w\d-_]+)/g, function (all, before, name) {
+        return before + variable(variables, node, all, name, opts);
     });
 };
 
 var inStringSyntax = function (variables, node, str, opts) {
-    return str.replace(/\$\(\s*([\w\d-_]+)\s*\)/g, function (_, name) {
-        return variable(variables, node, str, name, opts);
+    return str.replace(/\$\(\s*([\w\d-_]+)\s*\)/g, function (all, name) {
+        return variable(variables, node, all, name, opts);
     });
 };
 

@@ -57,7 +57,7 @@ describe('postcss-simple-vars', function () {
 
     it('throws an error on unknown variable', function () {
         expect(function () {
-            test('a{ width: $size }');
+            test('a{ width: -$size }');
         }).to.throw('<css input>:1:4: Undefined variable $size');
     });
 
