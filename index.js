@@ -4,6 +4,28 @@ var definition = function (variables, node) {
     node.removeSelf();
 };
 
+var objectDefinition = function (variables, node){
+    variables[node.selector.slice(1)] = node.nodes.reduce(function(ob, v){
+        ob[v.prop] = v.value;
+        return ob;
+    },{});
+    node.removeSelf();
+};
+
+function _walk(vars, ar){
+    if(!ar || !ar.length){
+        return undefined;
+    }
+    if(ar.length === 1){
+        return vars[ar[0]];
+    }
+    return _walk(vars[ar[0]], ar.slice(1));
+}
+
+var walkPath = function(variables, path){
+    return _walk(variables, path.split('.'));
+};
+
 var variable = function (variables, node, str, name, opts) {
     if ( opts.only ) {
         if ( typeof(opts.only[name]) != 'undefined' ) {
@@ -11,26 +33,25 @@ var variable = function (variables, node, str, name, opts) {
         } else {
             return str;
         }
-
-    } if ( typeof(variables[name]) != 'undefined' ) {
-        return variables[name];
-
+    }
+    var val = walkPath(variables, name);
+    if ( typeof(val) != 'undefined') {
+        return val;
     } else if ( opts.silent ) {
         return str;
-
     } else {
         throw node.error('Undefined variable $' + name);
     }
 };
 
 var simpleSyntax = function (variables, node, str, opts) {
-    return str.replace(/(^|[^\w])\$([\w\d-_]+)/g, function (_, before, name) {
+    return str.replace(/(^|[^\w])\$([\w\d-_\.]+)/g, function (_, before, name) {
         return before + variable(variables, node, '$' + name, name, opts);
     });
 };
 
 var inStringSyntax = function (variables, node, str, opts) {
-    return str.replace(/\$\(\s*([\w\d-_]+)\s*\)/g, function (all, name) {
+    return str.replace(/\$\(\s*([\w\d-_\.]+)\s*\)/g, function (all, name) {
         return variable(variables, node, all, name, opts);
     });
 };
@@ -73,7 +94,9 @@ module.exports = function (opts) {
                 }
 
             } else if ( node.type == 'rule' ) {
-                if ( node.selector.indexOf('$') != -1 ) {
+                if ( node.selector.indexOf('%') == 0 ){
+                    objectDefinition(variables, node);
+                } else if( node.selector.indexOf('$') != -1 ) {
                     ruleSelector(variables, node, opts);
                 }
 

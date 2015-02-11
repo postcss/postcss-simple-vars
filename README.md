@@ -45,6 +45,23 @@ $prefix { }
 $(prefix)_button { }
 ```
 
+## Namespaces
+
+If you want to group related variables together you can use a namespace rule:
+
+```css
+%myNamespace {
+    red: #f33;
+    myWeight: bold
+}
+
+p {
+    color: $myNamespace.red;
+    font-weight: $myNamespace.red;
+}
+
+```
+
 ## Usage
 
 Without options:
