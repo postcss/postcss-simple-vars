@@ -79,4 +79,12 @@ describe('postcss-simple-vars', function () {
         test('a{ zero: $zero }', 'a{ zero: 0 }', { variables: { zero: 0 } });
     });
 
+    it('Allows definition of namespaces', function () {
+        test('%namespace{ width: 10px } a{ width: $namespace.width }', 'a{ width: 10px }');
+    });
+
+    it('namespaces can accept multiple properties', function () {
+        test('%namespace{ width: 10px; potato: red } a{ width: $namespace.width; color: $namespace.potato }', 'a{ width: 10px; color: red }');
+    });
+
 });
