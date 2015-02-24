@@ -43,7 +43,7 @@ describe('postcss-simple-vars', function () {
     });
 
     it('replaces variables in at-rule params', function () {
-        test('$name: a; @atrule $name $(name)b { }', '@atrule a ab { }');
+        test('$name: a; @at $name; @at $(name)b { }', '@at a; @at ab { }');
     });
 
     it('parses at-rule without params', function () {

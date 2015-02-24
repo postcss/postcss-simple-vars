@@ -78,7 +78,7 @@ module.exports = function (opts) {
                 }
 
             } else if ( node.type == 'atrule' ) {
-                if ( node.params && node.params.indexOf('$(') != -1 ) {
+                if ( node.params && node.params.indexOf('$') != -1 ) {
                     atruleParams(variables, node, opts);
                 }
             }
