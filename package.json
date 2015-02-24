@@ -13,9 +13,9 @@
         "jshint-stylish": "1.0.0",
         "gulp-jshint":    "1.9.2",
         "gulp-mocha":     "2.0.0",
-        "postcss":        "4.0.4",
+        "postcss":        "4.0.6",
         "mocha":          "2.1.0",
-        "chai":           "2.0.0",
+        "chai":           "2.1.0",
         "gulp":           "3.8.11"
     },
     "scripts": {
