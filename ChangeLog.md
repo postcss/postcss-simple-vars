@@ -1,3 +1,6 @@
+## 0.2.4
+* Fix simple syntax variables in at-rule parameters.
+
 ## 0.2.3
 * Fix extra space on variables ignoring.
 
