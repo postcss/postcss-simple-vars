@@ -9,8 +9,8 @@ You can use variables inside values, selectors and at-rule’s parameters.
 If you want be closer to W3C spec, you should use [postcss-custom-properties] plugin.
 
 ```css
-$blue: #056ef0
-$column: 200px
+$blue: #056ef0;
+$column: 200px;
 
 .menu {
     width: calc(4 * $column);
