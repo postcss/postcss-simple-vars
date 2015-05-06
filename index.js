@@ -68,7 +68,7 @@ module.exports = function (opts) {
             if ( node.type == 'decl' ) {
                 if ( node.prop[0] == '$' ) {
                     if ( !opts.only ) definition(variables, node);
-                } else if ( node.value.indexOf('$') != -1 ) {
+                } else if ( node.value.toString().indexOf('$') != -1 ) {
                     declValue(variables, node, opts);
                 }
 
