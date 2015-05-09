@@ -1,3 +1,5 @@
+var postcss = require('postcss');
+
 var definition = function (variables, node) {
     var name = node.prop.slice(1);
     variables[name] = node.value;
@@ -53,11 +55,10 @@ var atruleParams = function (variables, node, opts) {
     node.params = bothSyntaxes(variables, node, node.params, opts);
 };
 
-module.exports = function (opts) {
+module.exports = postcss.plugin('postcss-simple-vars', function (opts) {
     if ( typeof opts === 'undefined' ) opts = { };
 
     var variables = { };
-
     if ( typeof opts.variables === 'object' ) {
         for ( var i in opts.variables ) variables[i] = opts.variables[i];
     }
@@ -85,8 +86,4 @@ module.exports = function (opts) {
 
         });
     };
-};
-
-module.exports.postcss = function (css) {
-    module.exports()(css);
-};
+});
