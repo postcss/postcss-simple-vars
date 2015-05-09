@@ -1,3 +1,9 @@
+## 0.3
+* Allow to use variables in variables values.
+* Accept function in `variables` option.
+* Support PostCSS 4.1 API.
+* Fix falling on non-string values in AST (by Anton Telesh).
+
 ## 0.2.4
 * Fix simple syntax variables in at-rule parameters.
 
