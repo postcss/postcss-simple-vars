@@ -100,6 +100,19 @@ gulp.task('css', function () {
 });
 ```
 
+You can set a function returning object, if you want to update default
+variables in webpack hot reload:
+
+```js
+postcss([
+    vars({
+        variables: function () {
+            return require('./config/colors');
+        }
+    })
+]
+```
+
 ### `silent`
 
 Left unknown variables in CSS and do not throw a error. Default is `false`.

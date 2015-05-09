@@ -58,12 +58,14 @@ var atruleParams = function (variables, node, opts) {
 module.exports = postcss.plugin('postcss-simple-vars', function (opts) {
     if ( typeof opts === 'undefined' ) opts = { };
 
-    var variables = { };
-    if ( typeof opts.variables === 'object' ) {
-        for ( var i in opts.variables ) variables[i] = opts.variables[i];
-    }
-
     return function (css) {
+        var variables = { };
+        if ( typeof opts.variables === 'function' ) {
+            variables = opts.variables();
+        } else if ( typeof opts.variables === 'object' ) {
+            for ( var i in opts.variables ) variables[i] = opts.variables[i];
+        }
+
         css.eachInside(function (node) {
 
             if ( node.type === 'decl' ) {

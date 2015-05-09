@@ -83,4 +83,17 @@ describe('postcss-simple-vars', function () {
         test('$one: 1; $two: $one 2; a{ value: $two }', 'a{ value: 1 2 }');
     });
 
+    it('set default values by function', function () {
+        var value;
+        var vars = function () {
+            return { config: value };
+        };
+
+        value = 1;
+        test('a{ width: $config }', 'a{ width: 1 }', { variables: vars });
+
+        value = 2;
+        test('a{ width: $config }', 'a{ width: 2 }', { variables: vars });
+    });
+
 });
