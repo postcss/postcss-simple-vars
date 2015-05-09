@@ -6,13 +6,13 @@ var definition = function (variables, node) {
 
 var variable = function (variables, node, str, name, opts) {
     if ( opts.only ) {
-        if ( typeof(opts.only[name]) != 'undefined' ) {
+        if ( typeof opts.only[name] !== 'undefined' ) {
             return opts.only[name];
         } else {
             return str;
         }
 
-    } if ( typeof(variables[name]) != 'undefined' ) {
+    } if ( typeof variables[name] !== 'undefined' ) {
         return variables[name];
 
     } else if ( opts.silent ) {
@@ -54,31 +54,31 @@ var atruleParams = function (variables, node, opts) {
 };
 
 module.exports = function (opts) {
-    if ( typeof(opts) == 'undefined' ) opts = { };
+    if ( typeof opts === 'undefined' ) opts = { };
 
     var variables = { };
 
-    if ( typeof(opts.variables) == 'object' ) {
+    if ( typeof opts.variables === 'object' ) {
         for ( var i in opts.variables ) variables[i] = opts.variables[i];
     }
 
     return function (css) {
         css.eachInside(function (node) {
 
-            if ( node.type == 'decl' ) {
-                if ( node.prop[0] == '$' ) {
+            if ( node.type === 'decl' ) {
+                if ( node.prop[0] === '$' ) {
                     if ( !opts.only ) definition(variables, node);
-                } else if ( node.value.toString().indexOf('$') != -1 ) {
+                } else if ( node.value.toString().indexOf('$') !== -1 ) {
                     declValue(variables, node, opts);
                 }
 
-            } else if ( node.type == 'rule' ) {
-                if ( node.selector.indexOf('$') != -1 ) {
+            } else if ( node.type === 'rule' ) {
+                if ( node.selector.indexOf('$') !== -1 ) {
                     ruleSelector(variables, node, opts);
                 }
 
-            } else if ( node.type == 'atrule' ) {
-                if ( node.params && node.params.indexOf('$') != -1 ) {
+            } else if ( node.type === 'atrule' ) {
+                if ( node.params && node.params.indexOf('$') !== -1 ) {
                     atruleParams(variables, node, opts);
                 }
             }
