@@ -81,6 +81,6 @@ describe('postcss-simple-vars', function () {
 
     it('allows to use var in other vars', function () {
         test('$one: 1; $two: $one 2; a{ value: $two }', 'a{ value: 1 2 }');
-    })
+    });
 
 });
