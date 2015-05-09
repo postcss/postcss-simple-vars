@@ -85,15 +85,15 @@ describe('postcss-simple-vars', function () {
 
     it('set default values by function', function () {
         var value;
-        var vars = function () {
+        var config = function () {
             return { config: value };
         };
 
         value = 1;
-        test('a{ width: $config }', 'a{ width: 1 }', { variables: vars });
+        test('a{ width: $config }', 'a{ width: 1 }', { variables: config });
 
         value = 2;
-        test('a{ width: $config }', 'a{ width: 2 }', { variables: vars });
+        test('a{ width: $config }', 'a{ width: 2 }', { variables: config });
     });
 
 });
