@@ -79,4 +79,8 @@ describe('postcss-simple-vars', function () {
         test('a{ zero: $zero }', 'a{ zero: 0 }', { variables: { zero: 0 } });
     });
 
+    it('allows to use var in other vars', function () {
+        test('$one: 1; $two: $one 2; a{ value: $two }', 'a{ value: 1 2 }');
+    })
+
 });

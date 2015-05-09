@@ -67,10 +67,11 @@ module.exports = postcss.plugin('postcss-simple-vars', function (opts) {
         css.eachInside(function (node) {
 
             if ( node.type === 'decl' ) {
+                if ( node.value.toString().indexOf('$') !== -1 ) {
+                    declValue(variables, node, opts);
+                }
                 if ( node.prop[0] === '$' ) {
                     if ( !opts.only ) definition(variables, node);
-                } else if ( node.value.toString().indexOf('$') !== -1 ) {
-                    declValue(variables, node, opts);
                 }
 
             } else if ( node.type === 'rule' ) {
