@@ -8,9 +8,6 @@
 
 You can use variables inside values, selectors and at-rule’s parameters.
 
-If you want be closer to W3C spec,
-you should use [postcss-custom-properties] plugin.
-
 ```css
 $blue: #056ef0;
 $column: 200px;
@@ -34,7 +31,13 @@ $column: 200px;
 }
 ```
 
+If you want be closer to W3C spec,
+you should use [postcss-custom-properties] plugin.
+
+Also you should look at [postcss-map] for big complicated configs.
+
 [postcss-custom-properties]: https://github.com/postcss/postcss-custom-properties
+[postcss-map]:               https://github.com/pascalduez/postcss-map
 [PostCSS]:                   https://github.com/postcss/postcss
 [ci-img]:                    https://travis-ci.org/postcss/postcss-simple-vars.svg
 [ci]:                        https://travis-ci.org/postcss/postcss-simple-vars
