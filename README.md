@@ -55,18 +55,8 @@ $(prefix)_button { }
 
 ## Usage
 
-Without options:
-
 ```js
 postcss([ require('postcss-simple-vars') ])
-```
-
-With options:
-
-```js
-postcss([
-    require('postcss-simple-vars')({ variables: require('./constants') })
-])
 ```
 
 See [PostCSS] docs for examples for your environment.
