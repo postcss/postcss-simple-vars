@@ -1,12 +1,12 @@
 var postcss = require('postcss');
 
-var definition = function (variables, node) {
+var definition = function (result, variables, node) {
     var name = node.prop.slice(1);
     variables[name] = node.value;
     node.removeSelf();
 };
 
-var variable = function (variables, node, str, name, opts) {
+var variable = function (result, variables, node, str, name, opts) {
     if ( opts.only ) {
         if ( typeof opts.only[name] !== 'undefined' ) {
             return opts.only[name];
@@ -19,46 +19,50 @@ var variable = function (variables, node, str, name, opts) {
 
     } else if ( opts.silent ) {
         return str;
-
+    }
+    var reason = 'Undefined variable $' + name;
+    if(opts.warn) {
+        result.warn(reason, {node: node});
+        return str;
     } else {
-        throw node.error('Undefined variable $' + name);
+        throw node.error(reason);
     }
 };
 
-var simpleSyntax = function (variables, node, str, opts) {
+var simpleSyntax = function (result, variables, node, str, opts) {
     return str.replace(/(^|[^\w])\$([\w\d-_]+)/g, function (_, before, name) {
-        return before + variable(variables, node, '$' + name, name, opts);
+        return before + variable(result, variables, node, '$' + name, name, opts);
     });
 };
 
-var inStringSyntax = function (variables, node, str, opts) {
+var inStringSyntax = function (result, variables, node, str, opts) {
     return str.replace(/\$\(\s*([\w\d-_]+)\s*\)/g, function (all, name) {
-        return variable(variables, node, all, name, opts);
+        return variable(result, variables, node, all, name, opts);
     });
 };
 
-var bothSyntaxes = function (variables, node, str, opts) {
-    str = simpleSyntax(variables, node, str, opts);
-    str = inStringSyntax(variables, node, str, opts);
+var bothSyntaxes = function (result, variables, node, str, opts) {
+    str = simpleSyntax(result, variables, node, str, opts);
+    str = inStringSyntax(result, variables, node, str, opts);
     return str;
 };
 
-var declValue = function (variables, node, opts) {
-    node.value = bothSyntaxes(variables, node, node.value, opts);
+var declValue = function (result, variables, node, opts) {
+    node.value = bothSyntaxes(result, variables, node, node.value, opts);
 };
 
-var ruleSelector = function (variables, node, opts) {
-    node.selector = bothSyntaxes(variables, node, node.selector, opts);
+var ruleSelector = function (result, variables, node, opts) {
+    node.selector = bothSyntaxes(result, variables, node, node.selector, opts);
 };
 
-var atruleParams = function (variables, node, opts) {
-    node.params = bothSyntaxes(variables, node, node.params, opts);
+var atruleParams = function (result, variables, node, opts) {
+    node.params = bothSyntaxes(result, variables, node, node.params, opts);
 };
 
 module.exports = postcss.plugin('postcss-simple-vars', function (opts) {
     if ( typeof opts === 'undefined' ) opts = { };
 
-    return function (css) {
+    return function (css, result) {
         var variables = { };
         if ( typeof opts.variables === 'function' ) {
             variables = opts.variables();
@@ -70,20 +74,20 @@ module.exports = postcss.plugin('postcss-simple-vars', function (opts) {
 
             if ( node.type === 'decl' ) {
                 if ( node.value.toString().indexOf('$') !== -1 ) {
-                    declValue(variables, node, opts);
+                    declValue(result, variables, node, opts);
                 }
                 if ( node.prop[0] === '$' ) {
-                    if ( !opts.only ) definition(variables, node);
+                    if ( !opts.only ) definition(result, variables, node);
                 }
 
             } else if ( node.type === 'rule' ) {
                 if ( node.selector.indexOf('$') !== -1 ) {
-                    ruleSelector(variables, node, opts);
+                    ruleSelector(result, variables, node, opts);
                 }
 
             } else if ( node.type === 'atrule' ) {
                 if ( node.params && node.params.indexOf('$') !== -1 ) {
-                    atruleParams(variables, node, opts);
+                    atruleParams(result, variables, node, opts);
                 }
             }
 
