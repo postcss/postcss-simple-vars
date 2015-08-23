@@ -3,7 +3,7 @@ var postcss = require('postcss');
 var definition = function (variables, node) {
     var name = node.prop.slice(1);
     variables[name] = node.value;
-    node.removeSelf();
+    node.remove();
 };
 
 var variable = function (variables, node, str, name, opts) {
@@ -66,7 +66,7 @@ module.exports = postcss.plugin('postcss-simple-vars', function (opts) {
             for ( var i in opts.variables ) variables[i] = opts.variables[i];
         }
 
-        css.eachInside(function (node) {
+        css.walk(function (node) {
 
             if ( node.type === 'decl' ) {
                 if ( node.value.toString().indexOf('$') !== -1 ) {
