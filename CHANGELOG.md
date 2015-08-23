@@ -1,3 +1,7 @@
+## 1.0
+* Use PostCSS 5.0 API.
+* Add `unknown` option.
+
 ## 0.3
 * Allow to use variables in variables values.
 * Accept function in `variables` option.
