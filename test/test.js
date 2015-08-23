@@ -61,6 +61,15 @@ describe('postcss-simple-vars', function () {
         }).to.throw('<css input>:1:4: Undefined variable $size');
     });
 
+    it('warns on unknown variable', function () {
+        var result = postcss(vars({warn: true})).process('a{ width: -$size }');
+        expect(result.css).to.eql('a{ width: -$size }');
+        expect(result).to.have.property('messages')
+            .that.is.an('array');
+        expect(result.messages).to.have.length(1);
+        expect(result.messages[0].text).to.eql('Undefined variable $size');
+    });
+
     it('allows to silent errors', function () {
         test('a{ width: $size }', 'a{ width: $size }', { silent: true });
     });
