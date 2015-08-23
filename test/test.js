@@ -96,4 +96,21 @@ describe('postcss-simple-vars', function () {
         test('a{ width: $config }', 'a{ width: 2 }', { variables: config });
     });
 
+    it('has callback for unknown variable', function () {
+        var result = [];
+        var unknown = function (node, name) {
+            result.push([node.prop, name]);
+        };
+
+        test('a{width:$one}', 'a{width:$one}', { unknown: unknown });
+        expect(result).to.eql([['width', 'one']]);
+    });
+
+    it('overrides unknown variable', function () {
+        var unknown = function () {
+            return 'unknown';
+        };
+        test('a{width:$one}', 'a{width:unknown}', { unknown: unknown });
+    });
+
 });

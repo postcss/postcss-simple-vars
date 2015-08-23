@@ -106,6 +106,21 @@ postcss([
 ]
 ```
 
+### `unknown`
+
+Callback on unknown variable name. It receives node instanc, variable name
+and PostCSS’ Result object.
+
+```js
+postcss([
+    vars({
+        unknown: function (node, name, result) {
+            node.warn(result, 'Unknown variable ' + name);
+        }
+    })
+]
+```
+
 ### `silent`
 
 Left unknown variables in CSS and do not throw a error. Default is `false`.
