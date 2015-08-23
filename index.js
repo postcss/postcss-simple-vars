@@ -21,9 +21,9 @@ var variable = function (variables, node, str, name, opts, result) {
         return str;
 
     } else {
-        var result = opts.unknown(node, name, result);
-        if ( result ) {
-            return result;
+        var fix = opts.unknown(node, name, result);
+        if ( fix ) {
+            return fix;
         } else {
             return str;
         }
@@ -66,7 +66,7 @@ module.exports = postcss.plugin('postcss-simple-vars', function (opts) {
     if ( !opts.unknown ) {
         opts.unknown = function (node, name) {
             throw node.error('Undefined variable $' + name);
-        }
+        };
     }
 
     return function (css, result) {
