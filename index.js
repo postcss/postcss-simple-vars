@@ -77,6 +77,14 @@ module.exports = postcss.plugin('postcss-simple-vars', function (opts) {
             for ( var i in opts.variables ) variables[i] = opts.variables[i];
         }
 
+        for ( var name in variables ) {
+            if ( name[0] === '$' ) {
+                var fixed = name.slice(1);
+                variables[fixed] = variables[name];
+                delete variables[name];
+            }
+        }
+
         css.walk(function (node) {
 
             if ( node.type === 'decl' ) {

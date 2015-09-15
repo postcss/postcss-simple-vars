@@ -69,6 +69,10 @@ describe('postcss-simple-vars', function () {
         test('a{ width: $one }', 'a{ width: 1 }', { variables: { one: 1 } });
     });
 
+    it('works with any syntax in option', function () {
+        test('a{ width: $one }', 'a{ width: 1 }', { variables: { $one: 1 } });
+    });
+
     it('cans get variables only from option', function () {
         test('$one: 2; $two: 2; a{ one: $one $two }',
              '$one: 2; $two: 2; a{ one: 1 $two }',
