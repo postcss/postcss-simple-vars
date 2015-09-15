@@ -1,3 +1,6 @@
+## 1.0.1
+* Fix variables with lead `$` in `variables` option.
+
 ## 1.0
 * Use PostCSS 5.0 API.
 * Add `unknown` option.
