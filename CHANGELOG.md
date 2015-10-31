@@ -1,3 +1,6 @@
+## 1.1.0
+* Allow to use variables in property names.
+
 ## 1.0.1
 * Fix variables with lead `$` in `variables` option.
 
