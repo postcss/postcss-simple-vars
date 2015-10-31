@@ -9,25 +9,28 @@
 You can use variables inside values, selectors and at-rule’s parameters.
 
 ```css
-$blue: #056ef0;
+$dir:    top;
+$blue:   #056ef0;
 $column: 200px;
 
-.menu {
-    width: calc(4 * $column);
-}
 .menu_link {
     background: $blue;
     width: $column;
 }
+.menu {
+    width: calc(4 * $column);
+    margin-$(dir): 10px;
+}
 ```
 
 ```css
-.menu {
-    width: calc(4 * 200px);
-}
 .menu_link {
     background: #056ef0;
     width: 200px;
+}
+.menu {
+    width: calc(4 * 200px);
+    margin-top: 10px;
 }
 ```
 
