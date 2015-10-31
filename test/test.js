@@ -14,6 +14,14 @@ describe('postcss-simple-vars', function () {
              'a{ width: 10px; height: 10px }');
     });
 
+    it('replaces vars in property names', function () {
+        test('$prop: width; a{ $(prop): 1px }', 'a{ width: 1px }');
+    });
+
+    it('replaces vars inside property names', function () {
+        test('$dir: top; a{ margin-$(dir): 1px }', 'a{ margin-top: 1px }');
+    });
+
     it('allows dashes and digits in variable name', function () {
         test('$a-b_10: 1;\na{ one: $a-b_10 a$(a-b_10) }', 'a{ one: 1 a1 }');
     });

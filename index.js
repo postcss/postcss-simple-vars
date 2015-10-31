@@ -52,6 +52,10 @@ var declValue = function (variables, node, opts, result) {
     node.value = bothSyntaxes(variables, node, node.value, opts, result);
 };
 
+var declProp = function (variables, node, opts, result) {
+    node.prop = inStringSyntax(variables, node, node.prop, opts, result);
+};
+
 var ruleSelector = function (variables, node, opts, result) {
     node.selector = bothSyntaxes(variables, node, node.selector, opts, result);
 };
@@ -91,7 +95,9 @@ module.exports = postcss.plugin('postcss-simple-vars', function (opts) {
                 if ( node.value.toString().indexOf('$') !== -1 ) {
                     declValue(variables, node, opts, result);
                 }
-                if ( node.prop[0] === '$' ) {
+                if ( node.prop.indexOf('$(') !== -1 ) {
+                    declProp(variables, node, opts, result);
+                } else if ( node.prop[0] === '$' ) {
                     if ( !opts.only ) definition(variables, node);
                 }
 
