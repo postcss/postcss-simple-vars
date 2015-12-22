@@ -111,8 +111,8 @@ postcss([
 
 ### `onVariables`
 
-Callback invoked once all variables in css are known. The callback receives an
-object representing the known variables, including those explicitly-declared
+Callback invoked once all variables in css are known. The callback receives
+an object representing the known variables, including those explicitly-declared
 by the [`variables`](#variables) option.
 
 ```js
