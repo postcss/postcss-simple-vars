@@ -109,6 +109,23 @@ postcss([
 ]
 ```
 
+### `onVariables`
+
+Callback invoked once all variables in css are known. The callback receives an
+object representing the known variables, including those explicitly-declared
+by the [`variables`](#variables) option.
+
+```js
+postcss([
+    vars({
+        onVariables: function (variables) {
+            console.log('CSS Variables');
+            console.log(JSON.stringify(variables, null, 2));
+        }
+    })
+]
+```
+
 ### `unknown`
 
 Callback on unknown variable name. It receives node instanc, variable name

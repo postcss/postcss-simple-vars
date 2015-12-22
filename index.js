@@ -113,5 +113,9 @@ module.exports = postcss.plugin('postcss-simple-vars', function (opts) {
             }
 
         });
+
+        if ( opts.onVariables ) {
+            opts.onVariables(variables);
+        }
     };
 });
