@@ -118,6 +118,13 @@ describe('postcss-simple-vars', function () {
         expect(result).to.eql([['width', 'one']]);
     });
 
+    it('has callback for exporting variables', function (done) {
+        test('$one: 1;', '', { onVariables: function (variables) {
+            expect(variables.one).to.eql('1');
+            done();
+        } });
+    });
+
     it('overrides unknown variable', function () {
         var unknown = function () {
             return 'unknown';
