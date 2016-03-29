@@ -74,48 +74,54 @@ module.exports = postcss.plugin('postcss-simple-vars', function (opts) {
     }
 
     return function (css, result) {
-        var variables = { };
+        var vars = { };
         if ( typeof opts.variables === 'function' ) {
-            variables = opts.variables();
+            vars = opts.variables();
         } else if ( typeof opts.variables === 'object' ) {
-            for ( var i in opts.variables ) variables[i] = opts.variables[i];
+            for ( var i in opts.variables ) vars[i] = opts.variables[i];
         }
 
-        for ( var name in variables ) {
-            if ( name[0] === '$' ) {
-                var fixed = name.slice(1);
-                variables[fixed] = variables[name];
-                delete variables[name];
-            }
+        if ( typeof vars.then !== 'function' ) {
+            vars = Promise.resolve(vars);
         }
 
-        css.walk(function (node) {
-
-            if ( node.type === 'decl' ) {
-                if ( node.value.toString().indexOf('$') !== -1 ) {
-                    declValue(variables, node, opts, result);
-                }
-                if ( node.prop.indexOf('$(') !== -1 ) {
-                    declProp(variables, node, opts, result);
-                } else if ( node.prop[0] === '$' ) {
-                    if ( !opts.only ) definition(variables, node);
-                }
-
-            } else if ( node.type === 'rule' ) {
-                if ( node.selector.indexOf('$') !== -1 ) {
-                    ruleSelector(variables, node, opts, result);
-                }
-
-            } else if ( node.type === 'atrule' ) {
-                if ( node.params && node.params.indexOf('$') !== -1 ) {
-                    atruleParams(variables, node, opts, result);
+        return vars.then(function (variables) {
+            for ( var name in variables ) {
+                if ( name[0] === '$' ) {
+                    var fixed = name.slice(1);
+                    variables[fixed] = variables[name];
+                    delete variables[name];
                 }
             }
 
+            css.walk(function (node) {
+
+                if ( node.type === 'decl' ) {
+                    if ( node.value.toString().indexOf('$') !== -1 ) {
+                        declValue(variables, node, opts, result);
+                    }
+                    if ( node.prop.indexOf('$(') !== -1 ) {
+                        declProp(variables, node, opts, result);
+                    } else if ( node.prop[0] === '$' ) {
+                        if ( !opts.only ) definition(variables, node);
+                    }
+
+                } else if ( node.type === 'rule' ) {
+                    if ( node.selector.indexOf('$') !== -1 ) {
+                        ruleSelector(variables, node, opts, result);
+                    }
+
+                } else if ( node.type === 'atrule' ) {
+                    if ( node.params && node.params.indexOf('$') !== -1 ) {
+                        atruleParams(variables, node, opts, result);
+                    }
+                }
+
+            });
+
+            if ( opts.onVariables ) {
+                opts.onVariables(variables);
+            }
         });
-
-        if ( opts.onVariables ) {
-            opts.onVariables(variables);
-        }
     };
 });
