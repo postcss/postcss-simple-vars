@@ -35,7 +35,7 @@ $column: 200px;
 ```
 
 If you want be closer to W3C spec,
-you should use [postcss-custom-properties] and [postcss-at-rules-variavles] plugins.
+you should use [postcss-custom-properties] and [postcss-at-rules-variables] plugins.
 
 Also you should look at [postcss-map] for big complicated configs.
 
