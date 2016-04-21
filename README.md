@@ -35,15 +35,16 @@ $column: 200px;
 ```
 
 If you want be closer to W3C spec,
-you should use [postcss-custom-properties] plugin.
+you should use [postcss-custom-properties] and [postcss-at-rules-variavles] plugins.
 
 Also you should look at [postcss-map] for big complicated configs.
 
-[postcss-custom-properties]: https://github.com/postcss/postcss-custom-properties
-[postcss-map]:               https://github.com/pascalduez/postcss-map
-[PostCSS]:                   https://github.com/postcss/postcss
-[ci-img]:                    https://travis-ci.org/postcss/postcss-simple-vars.svg
-[ci]:                        https://travis-ci.org/postcss/postcss-simple-vars
+[postcss-at-rules-variables]: https://github.com/GitScrum/postcss-at-rules-variables
+[postcss-custom-properties]:  https://github.com/postcss/postcss-custom-properties
+[postcss-map]:                https://github.com/pascalduez/postcss-map
+[PostCSS]:                    https://github.com/postcss/postcss
+[ci-img]:                     https://travis-ci.org/postcss/postcss-simple-vars.svg
+[ci]:                         https://travis-ci.org/postcss/postcss-simple-vars
 
 ## Interpolation
 
