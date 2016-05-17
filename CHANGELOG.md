@@ -1,3 +1,6 @@
+## 2.0
+* Support variables inside comments (by Vince Speelman).
+
 ## 1.2.0
 * Add `onVariables` option (by Duncan Beevers).
 
