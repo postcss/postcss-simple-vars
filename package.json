@@ -17,13 +17,17 @@
     "url":  "https://github.com/postcss/postcss-simple-vars.git"
   },
   "dependencies": {
-    "postcss": "^5.0.13"
+    "postcss": "^5.0.21"
   },
   "devDependencies": {
-    "eslint": "1.10.3",
-    "ava":    "0.8.0"
+    "eslint-config-postcss": "2.0.2",
+    "eslint":                "2.10.2",
+    "ava":                   "0.14.0"
   },
   "scripts": {
     "test": "ava && eslint *.js"
+  },
+  "eslintConfig": {
+    "extends": "eslint-config-postcss/es5"
   }
 }

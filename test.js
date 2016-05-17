@@ -4,7 +4,7 @@ import test    from 'ava';
 import vars from './';
 
 function run(t, input, output, opts = { }) {
-    t.same(postcss(vars(opts)).process(input).css, output);
+    t.deepEqual(postcss(vars(opts)).process(input).css, output);
 }
 
 test('replaces variables in values', t => {
@@ -117,13 +117,13 @@ test('has callback for unknown variable', t => {
     };
 
     run(t, 'a{width:$one}', 'a{width:$one}', { unknown: unknown });
-    t.same(result, [['width', 'one']]);
+    t.deepEqual(result, [['width', 'one']]);
 });
 
 test.cb('has callback for exporting variables', t => {
     run(t, '$one: 1;', '', {
         onVariables: (variables) => {
-            t.same(variables.one, '1');
+            t.deepEqual(variables.one, '1');
             t.end();
         }
     });
