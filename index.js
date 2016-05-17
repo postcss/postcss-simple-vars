@@ -64,6 +64,10 @@ var atruleParams = function (variables, node, opts, result) {
     node.params = bothSyntaxes(variables, node, node.params, opts, result);
 };
 
+var comment = function (variables, node, opts, result) {
+    node.text = bothSyntaxes(variables, node, node.text, opts, result);
+};
+
 module.exports = postcss.plugin('postcss-simple-vars', function (opts) {
     if ( typeof opts === 'undefined' ) opts = { };
 
@@ -110,8 +114,11 @@ module.exports = postcss.plugin('postcss-simple-vars', function (opts) {
                 if ( node.params && node.params.indexOf('$') !== -1 ) {
                     atruleParams(variables, node, opts, result);
                 }
+            } else if ( node.type === 'comment' ) {
+                if ( node.text.indexOf('$') !== -1 ) {
+                    comment(variables, node, opts, result);
+                }
             }
-
         });
 
         if ( opts.onVariables ) {

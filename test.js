@@ -20,6 +20,10 @@ test('replaces vars inside property names', t => {
     run(t, '$dir: top; a{ margin-$(dir): 1px }', 'a{ margin-top: 1px }');
 });
 
+test('replaces vars in comments', t => {
+    run(t, '$prop: width; /* $(prop): 1px */', '/* width: 1px */');
+});
+
 test('allows dashes and digits in variable name', t => {
     run(t, '$a-b_10: 1;\na{ one: $a-b_10 a$(a-b_10) }', 'a{ one: 1 a1 }');
 });
