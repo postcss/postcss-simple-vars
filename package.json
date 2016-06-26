@@ -12,10 +12,7 @@
   ],
   "author": "Andrey Sitnik <andrey@sitnik.ru>",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url":  "https://github.com/postcss/postcss-simple-vars.git"
-  },
+  "repository": "postcss/postcss-simple-vars",
   "dependencies": {
     "postcss": "^5.0.21"
   },
