@@ -6,5 +6,3 @@ npm-debug.log
 
 test.js
 .travis.yml
-
-gulpfile.js
