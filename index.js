@@ -65,7 +65,10 @@ var atruleParams = function (variables, node, opts, result) {
 };
 
 var comment = function (variables, node, opts, result) {
-    node.text = bothSyntaxes(variables, node, node.text, opts, result);
+    node.text = node.text
+        .replace(/<<\$\(\s*([\w\d-_]+)\s*\)>>/g, function (all, name) {
+            return variable(variables, node, all, name, opts, result);
+        });
 };
 
 module.exports = postcss.plugin('postcss-simple-vars', function (opts) {

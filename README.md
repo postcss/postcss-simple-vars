@@ -57,6 +57,25 @@ $prefix { }
 $(prefix)_button { }
 ```
 
+## Comments
+
+You could use variables in comments too (for example, to generate special
+[mdcss] comments). But syntax for comment variables is different to separate
+them from PreCSS code examples:
+
+```css
+$width: 100px;
+/* $width: <<$(width)>> */
+```
+
+compiles to:
+
+```css
+/* $width: 100px */
+```
+
+[mdcss]: https://github.com/jonathantneal/mdcss
+
 ## Usage
 
 ```js

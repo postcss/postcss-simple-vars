@@ -21,7 +21,7 @@ test('replaces vars inside property names', t => {
 });
 
 test('replaces vars in comments', t => {
-    run(t, '$prop: width; /* $(prop): 1px */', '/* width: 1px */');
+    run(t, '$prop: width; /* <<$(prop)>>: 1px */', '/* width: 1px */');
 });
 
 test('allows dashes and digits in variable name', t => {
