@@ -1,12 +1,12 @@
 var postcss = require('postcss');
 
-var definition = function (variables, node) {
+function definition(variables, node) {
     var name = node.prop.slice(1);
     variables[name] = node.value;
     node.remove();
-};
+}
 
-var variable = function (variables, node, str, name, opts, result) {
+function variable(variables, node, str, name, opts, result) {
     if ( opts.only ) {
         if ( typeof opts.only[name] !== 'undefined' ) {
             return opts.only[name];
@@ -28,48 +28,48 @@ var variable = function (variables, node, str, name, opts, result) {
             return str;
         }
     }
-};
+}
 
-var simpleSyntax = function (variables, node, str, opts, result) {
+function simpleSyntax(variables, node, str, opts, result) {
     return str.replace(/(^|[^\w])\$([\w\d-_]+)/g, function (_, bef, name) {
         return bef + variable(variables, node, '$' + name, name, opts, result);
     });
-};
+}
 
-var inStringSyntax = function (variables, node, str, opts, result) {
+function inStringSyntax(variables, node, str, opts, result) {
     return str.replace(/\$\(\s*([\w\d-_]+)\s*\)/g, function (all, name) {
         return variable(variables, node, all, name, opts, result);
     });
-};
+}
 
-var bothSyntaxes = function (variables, node, str, opts, result) {
+function bothSyntaxes(variables, node, str, opts, result) {
     str = simpleSyntax(variables, node, str, opts, result);
     str = inStringSyntax(variables, node, str, opts, result);
     return str;
-};
+}
 
-var declValue = function (variables, node, opts, result) {
+function declValue(variables, node, opts, result) {
     node.value = bothSyntaxes(variables, node, node.value, opts, result);
-};
+}
 
-var declProp = function (variables, node, opts, result) {
+function declProp(variables, node, opts, result) {
     node.prop = inStringSyntax(variables, node, node.prop, opts, result);
-};
+}
 
-var ruleSelector = function (variables, node, opts, result) {
+function ruleSelector(variables, node, opts, result) {
     node.selector = bothSyntaxes(variables, node, node.selector, opts, result);
-};
+}
 
-var atruleParams = function (variables, node, opts, result) {
+function atruleParams(variables, node, opts, result) {
     node.params = bothSyntaxes(variables, node, node.params, opts, result);
-};
+}
 
-var comment = function (variables, node, opts, result) {
+function comment(variables, node, opts, result) {
     node.text = node.text
         .replace(/<<\$\(\s*([\w\d-_]+)\s*\)>>/g, function (all, name) {
             return variable(variables, node, all, name, opts, result);
         });
-};
+}
 
 module.exports = postcss.plugin('postcss-simple-vars', function (opts) {
     if ( typeof opts === 'undefined' ) opts = { };
