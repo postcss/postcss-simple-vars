@@ -48,20 +48,38 @@ function bothSyntaxes(variables, node, str, opts, result) {
     return str;
 }
 
+function repeat(value, callback) {
+    var oldValue;
+    var newValue = value;
+    do {
+        oldValue = newValue;
+        newValue = callback(oldValue);
+    } while (newValue !== oldValue && newValue.indexOf('$') !== -1);
+    return newValue;
+}
+
 function declValue(variables, node, opts, result) {
-    node.value = bothSyntaxes(variables, node, node.value, opts, result);
+    node.value = repeat(node.value, function (value) {
+        return bothSyntaxes(variables, node, value, opts, result);
+    });
 }
 
 function declProp(variables, node, opts, result) {
-    node.prop = inStringSyntax(variables, node, node.prop, opts, result);
+    node.prop = repeat(node.prop, function (value) {
+        return inStringSyntax(variables, node, value, opts, result);
+    });
 }
 
 function ruleSelector(variables, node, opts, result) {
-    node.selector = bothSyntaxes(variables, node, node.selector, opts, result);
+    node.selector = repeat(node.selector, function (value) {
+        return bothSyntaxes(variables, node, value, opts, result);
+    });
 }
 
 function atruleParams(variables, node, opts, result) {
-    node.params = bothSyntaxes(variables, node, node.params, opts, result);
+    node.params = repeat(node.params, function (value) {
+        return bothSyntaxes(variables, node, value, opts, result);
+    });
 }
 
 function comment(variables, node, opts, result) {

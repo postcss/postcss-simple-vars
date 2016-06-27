@@ -133,3 +133,7 @@ test('overrides unknown variable', t => {
     let unknown = () => 'unknown';
     run(t, 'a{width:$one}', 'a{width:unknown}', { unknown: unknown });
 });
+
+test('supports nested vairables', t => {
+    run(t, '$one: 1; $p: on; test: $($(p)e)', 'test: 1');
+});
