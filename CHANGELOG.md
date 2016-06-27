@@ -1,3 +1,7 @@
+## 3.0
+* Comment variables now must have special `<<$(syntax)>>`.
+* Add nested variables support like `$(color$(idx))`.
+
 ## 2.0
 * Support variables inside comments (by Vince Speelman).
 
