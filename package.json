@@ -14,11 +14,11 @@
   "license": "MIT",
   "repository": "postcss/postcss-simple-vars",
   "dependencies": {
-    "postcss": "^5.0.21"
+    "postcss": "^5.1.0"
   },
   "devDependencies": {
     "eslint-config-postcss": "2.0.2",
-    "eslint":                "2.13.1",
+    "eslint":                "3.0.1",
     "ava":                   "0.15.2"
   },
   "scripts": {
