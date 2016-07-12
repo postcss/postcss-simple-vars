@@ -2,7 +2,7 @@ var postcss = require('postcss');
 
 function definition(variables, node) {
     var name = node.prop.slice(1);
-    variables[name] = node.value;
+    variables[name] = node.value.replace(/'|"/g, '');
     node.remove();
 }
 
