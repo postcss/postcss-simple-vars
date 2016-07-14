@@ -1,8 +1,8 @@
 var postcss = require('postcss');
 
-function definition(variables, node) {
+function definition(variables, defaultVariables, node) {
     var name = node.prop.slice(1);
-    variables[name] = node.value;
+    variables[name] = defaultVariables[name] || node.value;
     node.remove();
 }
 
@@ -99,21 +99,24 @@ module.exports = postcss.plugin('postcss-simple-vars', function (opts) {
     }
 
     return function (css, result) {
-        var variables = { };
+        var defaultVariables = { };
         if ( typeof opts.variables === 'function' ) {
-            variables = opts.variables();
+            defaultVariables = opts.variables();
         } else if ( typeof opts.variables === 'object' ) {
-            for ( var i in opts.variables ) variables[i] = opts.variables[i];
-        }
-
-        for ( var name in variables ) {
-            if ( name[0] === '$' ) {
-                var fixed = name.slice(1);
-                variables[fixed] = variables[name];
-                delete variables[name];
+            for ( var i in opts.variables ) {
+                defaultVariables[i] = opts.variables[i];
             }
         }
 
+        for ( var name in defaultVariables ) {
+            if ( name[0] === '$' ) {
+                var fixed = name.slice(1);
+                defaultVariables[fixed] = defaultVariables[name];
+                delete defaultVariables[name];
+            }
+        }
+
+        var variables = JSON.parse(JSON.stringify(defaultVariables));
         css.walk(function (node) {
 
             if ( node.type === 'decl' ) {
@@ -123,7 +126,9 @@ module.exports = postcss.plugin('postcss-simple-vars', function (opts) {
                 if ( node.prop.indexOf('$(') !== -1 ) {
                     declProp(variables, node, opts, result);
                 } else if ( node.prop[0] === '$' ) {
-                    if ( !opts.only ) definition(variables, node);
+                    if ( !opts.only ) {
+                        definition(variables, defaultVariables, node);
+                    }
                 }
 
             } else if ( node.type === 'rule' ) {
