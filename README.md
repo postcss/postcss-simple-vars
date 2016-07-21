@@ -76,6 +76,16 @@ compiles to:
 
 [mdcss]: https://github.com/jonathantneal/mdcss
 
+## Escaping
+
+If you want to escape `$` in `content` property, use Unicode escape syntax.
+
+```css
+.foo::before {
+    content: "\0024x";
+}
+```
+
 ## Usage
 
 ```js
