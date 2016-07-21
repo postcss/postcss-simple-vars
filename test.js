@@ -137,3 +137,9 @@ test('overrides unknown variable', t => {
 test('supports nested vairables', t => {
     run(t, '$one: 1; $p: on; test: $($(p)e)', 'test: 1');
 });
+
+test('overrides default variables', t => {
+    let variables = { a: 1 };
+    run(t, 'a: $a; $a: 2; b: $a;', 'a: 1; b: 2;', { variables });
+    t.deepEqual(variables, { a: 1 });
+});
