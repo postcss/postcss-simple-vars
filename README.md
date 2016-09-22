@@ -158,8 +158,8 @@ postcss([
 
 ### `unknown`
 
-Callback on unknown variable name. It receives node instanc, variable name
-and PostCSS’ Result object.
+Callback on unknown variable name. It receives node instance, variable name
+and PostCSS Result object.
 
 ```js
 postcss([
@@ -173,7 +173,7 @@ postcss([
 
 ### `silent`
 
-Left unknown variables in CSS and do not throw a error. Default is `false`.
+Left unknown variables in CSS and do not throw an error. Default is `false`.
 
 ### `only`
 
