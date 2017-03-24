@@ -1,10 +1,15 @@
 /**
  * postcss-simple-vars
  * PostCSS plugin for Sass-like variables
- * @author    {ashelley <andrey@sitnik.ru>}
+ * @author    {Andrey Sitnik <andrey@sitnik.ru>}
  * @copyright {MIT@2016-now}
  */
 declare module "postcss-simple-vars" {
+  /**
+   * imports postcss
+   */
+  import * as postcss from 'postcss';
+
   /**
    * Simple vars namespace
    */
@@ -29,8 +34,39 @@ declare module "postcss-simple-vars" {
      * @export
      * @interface ISimpleVarsArgument
      */
-    export interface ISimpleVarsArgument {
+    export interface ISimpleVarsArgument extends ISimpleVarsBase {
       variables: IArgument;
+    }
+
+    /**
+     * Base options interface 
+     * @interface ISimpleVarsBase
+     */
+    interface ISimpleVarsBase {
+      /**
+       * Set value only for variables from this object. Other variables will not be changed. 
+       * It is useful for PostCSS plugin developers.
+       * @type {*}
+       * @memberOf ISimpleVarsBase
+       */
+      only?: any;
+      /**
+       * Callback invoked once all variables in css are known. 
+       * The callback receives an object representing the known variables, 
+       * including those explicitly-declared by the variables option.
+       */
+      onVariables?: (vars: string) => void;
+      /**
+       * Left unknown variables in CSS and do not throw an error.
+       * @default {false}
+       * @type {boolean}
+       */
+      silent?: boolean;
+      /**
+       * Callback on unknown variable name. It receives node instance, variable name and PostCSS Result object.
+       * @memberOf ISimpleVarsBase
+       */
+      unknown?: (node: postcss.Node, name: string, result: postcss.Result) => void;
     }
 
     /**
@@ -38,7 +74,7 @@ declare module "postcss-simple-vars" {
      * @export
      * @interface ISimpleVarsCallableArgument
      */
-    export interface ISimpleVarsCallableArgument {
+    export interface ISimpleVarsCallableArgument extends ISimpleVarsBase {
       variables: ICallableArgument;
     }
   }
