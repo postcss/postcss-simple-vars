@@ -1,3 +1,6 @@
+# Change Log
+This project adheres to [Semantic Versioning](http://semver.org/).
+
 ## 3.0
 * Comment variables now must have special `<<$(syntax)>>`.
 * Add nested variables support like `$(color$(idx))`.
