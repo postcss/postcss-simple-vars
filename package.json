@@ -17,14 +17,17 @@
     "postcss": "^5.2.16"
   },
   "devDependencies": {
-    "ava": "^0.18.2",
     "eslint": "^3.18.0",
-    "eslint-config-postcss": "2.0.2"
+    "eslint-config-postcss": "2.0.2",
+    "jest": "^19.0.2"
   },
   "scripts": {
-    "test": "ava && eslint *.js"
+    "test": "jest && eslint *.js"
   },
   "eslintConfig": {
-    "extends": "eslint-config-postcss/es5"
+    "extends": "eslint-config-postcss/es5",
+    "env": {
+      "jest": true
+    }
   }
 }
