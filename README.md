@@ -34,6 +34,8 @@ $column: 200px;
 }
 ```
 
+Note: variables are caseSensitive. So do camelCase variables in your css.
+
 If you want be closer to W3C spec,
 you should use [postcss-custom-properties] and [postcss-at-rules-variables] plugins.
 
