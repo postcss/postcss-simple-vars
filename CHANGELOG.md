@@ -1,6 +1,9 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 4.0
+* Use PostCSS 6.0 API.
+
 ## 3.1
 * Add TypeScript definitions (by Paolo Roth).
 
