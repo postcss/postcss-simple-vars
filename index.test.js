@@ -7,6 +7,7 @@ function run(input, output, opts) {
         .then(result => {
             expect(result.css).toEqual(output);
             expect(result.warnings().length).toBe(0);
+            return result;
         });
 }
 
@@ -145,6 +146,26 @@ it('overrides unknown variable', () => {
 
 it('supports nested vairables', () => {
     run('$one: 1; $p: on; test: $($(p)e)', 'test: 1');
+});
+
+it('export variables to postcss result.messages', () => {
+    return run('$one: 1; $p: on; test: $one', 'test: 1')
+      .then(function (result) {
+          expect(result.messages).toEqual([
+              {
+                  plugin: 'postcss-simple-vars',
+                  type: 'variable',
+                  name: 'one',
+                  value: '1'
+              },
+              {
+                  plugin: 'postcss-simple-vars',
+                  type: 'variable',
+                  name: 'p',
+                  value: 'on'
+              }
+          ]);
+      });
 });
 
 it('overrides default variables', () => {

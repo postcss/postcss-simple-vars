@@ -142,6 +142,15 @@ module.exports = postcss.plugin('postcss-simple-vars', function (opts) {
             }
         });
 
+        Object.keys(variables).forEach(function (key) {
+            result.messages.push({
+                plugin: 'postcss-simple-vars',
+                type: 'variable',
+                name: key,
+                value: variables[key]
+            });
+        });
+
         if ( opts.onVariables ) {
             opts.onVariables(variables);
         }
