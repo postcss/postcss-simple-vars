@@ -148,7 +148,7 @@ it('supports nested vairables', () => {
     run('$one: 1; $p: on; test: $($(p)e)', 'test: 1');
 });
 
-it('export variables to postcss result.messages', () => {
+it('exports variables to messages', () => {
     return run('$one: 1; $p: on; test: $one', 'test: 1')
       .then(function (result) {
           expect(result.messages).toEqual([
