@@ -12,8 +12,10 @@ function run(input, output, opts) {
 }
 
 it('replaces variables in values', () => {
-    run('$size: 10px;\na{ width: $size; height: $size }',
-           'a{ width: 10px; height: 10px }');
+    run(
+        '$size: 10px;\na{ width: $size; height: $size }',
+        'a{ width: 10px; height: 10px }'
+    );
 });
 
 it('replaces vars in property names', () => {
@@ -65,15 +67,19 @@ it('parses at-rule without params', () => {
 });
 
 it('overrides variables', () => {
-    run('$var: 1; a{ one: $var } b{ $var: 2; two: $var } c{ two: $var }',
-           'a{ one: 1 } b{ two: 2 } c{ two: 2 }');
+    run(
+        '$var: 1; a{ one: $var } b{ $var: 2; two: $var } c{ two: $var }',
+        'a{ one: 1 } b{ two: 2 } c{ two: 2 }'
+    );
 });
 
 it('throws an error on unknown variable', () => {
     return new Promise(resolve => {
         run('a{ width: -$size }').catch(e => {
-            expect(e.message).toEqual('postcss-simple-vars: <css input>:1:4: ' +
-                'Undefined variable $size');
+            expect(e.message).toEqual(
+                'postcss-simple-vars: <css input>:1:4: ' +
+                'Undefined variable $size'
+            );
             resolve();
         });
     });
@@ -92,9 +98,11 @@ it('works with any syntax in option', () => {
 });
 
 it('cans get variables only from option', () => {
-    run('$one: 2; $two: 2; a{ one: $one $two }',
-           '$one: 2; $two: 2; a{ one: 1 $two }',
-           { only: { one: 1 } });
+    run(
+        '$one: 2; $two: 2; a{ one: $one $two }',
+        '$one: 2; $two: 2; a{ one: 1 $two }',
+        { only: { one: 1 } }
+    );
 });
 
 it('works with false value', () => {
@@ -149,23 +157,22 @@ it('supports nested vairables', () => {
 });
 
 it('exports variables to messages', () => {
-    return run('$one: 1; $p: on; test: $one', 'test: 1')
-      .then(function (result) {
-          expect(result.messages).toEqual([
-              {
-                  plugin: 'postcss-simple-vars',
-                  type: 'variable',
-                  name: 'one',
-                  value: '1'
-              },
-              {
-                  plugin: 'postcss-simple-vars',
-                  type: 'variable',
-                  name: 'p',
-                  value: 'on'
-              }
-          ]);
-      });
+    return run('$one: 1; $p: on;', '').then(function (result) {
+        expect(result.messages).toEqual([
+            {
+                plugin: 'postcss-simple-vars',
+                type: 'variable',
+                name: 'one',
+                value: '1'
+            },
+            {
+                plugin: 'postcss-simple-vars',
+                type: 'variable',
+                name: 'p',
+                value: 'on'
+            }
+        ]);
+    });
 });
 
 it('overrides default variables', () => {
