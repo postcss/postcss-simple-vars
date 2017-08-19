@@ -136,7 +136,7 @@ postcss([
             return require('./config/colors');
         }
     })
-]
+])
 ```
 
 ### `onVariables`
@@ -153,7 +153,7 @@ postcss([
             console.log(JSON.stringify(variables, null, 2));
         }
     })
-]
+])
 ```
 
 ### `unknown`
@@ -168,7 +168,7 @@ postcss([
             node.warn(result, 'Unknown variable ' + name);
         }
     })
-]
+])
 ```
 
 ### `silent`
@@ -182,13 +182,32 @@ Other variables will not be changed. It is useful for PostCSS plugin develop
 
 ## Messages
 
-postcss-simple-vars passes result.messages for each variable
+This plugin passes `result.messages` for each variable:
 
+```js
+postcss([vars]).process('$one: 1; $two: 2').then(function (result) {
+    console.log(result.messages)
+})
 ```
-{
-    plugin: 'postcss-simple-vars',
-    type: 'variable',
-    name: string, // variable name
-    value: string // variable value
-}
+
+will output:
+
+```js
+[
+    {
+        plugin: 'postcss-simple-vars',
+        type: 'variable',
+        name: 'one'
+        value: '1'
+    },
+    {
+        plugin: 'postcss-simple-vars',
+        type: 'variable',
+        name: 'two'
+        value: '2'
+    }
+]
 ```
+
+You can get access to this variables in `result.messages` also
+in any plugin goes after `postcss-simple-vars`.
