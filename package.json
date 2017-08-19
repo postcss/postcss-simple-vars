@@ -14,12 +14,12 @@
   "license": "MIT",
   "repository": "postcss/postcss-simple-vars",
   "dependencies": {
-    "postcss": "^6.0.1"
+    "postcss": "^6.0.9"
   },
   "devDependencies": {
-    "eslint": "^3.19.0",
+    "eslint": "^4.4.1",
     "eslint-config-postcss": "2.0.2",
-    "jest": "^20.0.0"
+    "jest": "^20.0.4"
   },
   "scripts": {
     "test": "jest && eslint *.js"
