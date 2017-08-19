@@ -1,6 +1,9 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 4.1
+* Pass all variables to `result.messages` (by Carl Hopf).
+
 ## 4.0
 * Use PostCSS 6.0 API.
 
