@@ -13,7 +13,7 @@ function variable(variables, node, str, name, opts, result) {
         }
 
         return str;
-    } 
+    }
 
     if ( typeof variables[name] !== 'undefined' ) {
         return variables[name];
