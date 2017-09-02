@@ -10,24 +10,28 @@ function variable(variables, node, str, name, opts, result) {
     if ( opts.only ) {
         if ( typeof opts.only[name] !== 'undefined' ) {
             return opts.only[name];
-        } else {
-            return str;
         }
 
-    } if ( typeof variables[name] !== 'undefined' ) {
+        return str;
+    }
+
+    if ( typeof variables[name] !== 'undefined' ) {
         return variables[name];
 
-    } else if ( opts.silent ) {
+    }
+
+    if ( opts.silent ) {
         return str;
 
-    } else {
-        var fix = opts.unknown(node, name, result);
-        if ( fix ) {
-            return fix;
-        } else {
-            return str;
-        }
     }
+
+    var fix = opts.unknown(node, name, result);
+
+    if ( fix ) {
+        return fix;
+    }
+
+    return str;
 }
 
 function simpleSyntax(variables, node, str, opts, result) {
