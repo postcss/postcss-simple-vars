@@ -8,7 +8,7 @@
 
 You can use variables inside values, selectors and at-rule’s parameters.
 
-```css
+```pcss
 $dir:    top;
 $blue:   #056ef0;
 $column: 200px;
@@ -50,7 +50,7 @@ Also you should look at [postcss-map] for big complicated configs.
 
 There is special syntax if you want to use variable inside CSS words:
 
-```css
+```pcss
 $prefix: my-company-widget
 
 $prefix { }
@@ -63,7 +63,7 @@ You could use variables in comments too (for example, to generate special
 [mdcss] comments). But syntax for comment variables is different to separate
 them from PreCSS code examples:
 
-```css
+```pcss
 $width: 100px;
 /* $width: <<$(width)>> */
 ```
