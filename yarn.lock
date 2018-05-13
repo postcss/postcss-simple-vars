@@ -527,6 +527,10 @@ ci-info@^1.0.0:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/ci-info/-/ci-info-1.1.3.tgz#710193264bb05c77b8c90d02f5aaf22216a667b2"
 
+ci-job-number@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/ci-job-number/-/ci-job-number-0.3.0.tgz#34bdd114b0dece1960287bd40a57051041a2a800"
+
 circular-json@^0.3.1:
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/circular-json/-/circular-json-0.3.3.tgz#815c99ea84f6809529d2f45791bdf82711352d66"
@@ -830,6 +834,12 @@ escodegen@^1.9.0:
     optionator "^0.8.1"
   optionalDependencies:
     source-map "~0.6.1"
+
+eslint-ci@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/eslint-ci/-/eslint-ci-0.1.1.tgz#4601539547e8369d3ea9d1075166dcffb6a54f4b"
+  dependencies:
+    ci-job-number "^0.3.0"
 
 eslint-config-postcss@2.0.2:
   version "2.0.2"
