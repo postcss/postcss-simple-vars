@@ -3,7 +3,7 @@ var postcss = require('postcss');
 var vars = require('./');
 
 function run(input, output, opts) {
-    return postcss([ vars(opts) ]).process(input)
+    return postcss([ vars(opts) ]).process(input, { from: '/test.css' })
         .then(result => {
             expect(result.css).toEqual(output);
             expect(result.warnings().length).toBe(0);
@@ -77,7 +77,7 @@ it('throws an error on unknown variable', () => {
     return new Promise(resolve => {
         run('a{ width: -$size }').catch(e => {
             expect(e.message).toEqual(
-                'postcss-simple-vars: <css input>:1:4: ' +
+                'postcss-simple-vars: /test.css:1:4: ' +
                 'Undefined variable $size'
             );
             resolve();
