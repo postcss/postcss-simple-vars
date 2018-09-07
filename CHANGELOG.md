@@ -1,6 +1,10 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.0
+* Use PostCSS 7 (by Douglas Duteil).
+* Remove Node.js 4 support.
+
 ## 4.1
 * Pass all variables to `result.messages` (by Carl Hopf).
 
