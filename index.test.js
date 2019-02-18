@@ -182,3 +182,19 @@ it('overrides default variables', function () {
   })
   expect(variables).toEqual({ a: 1 })
 })
+
+it('keep top level variables', function () {
+  return run(
+    '$a: 42; body { color: $a }',
+    '$a: 42; body { color: 42 }',
+    { keep: true }
+  )
+})
+
+it('keep nested variables', function () {
+  return run(
+    'body { $a: 42; color: $a }',
+    'body { $a: 42; color: 42 }',
+    { keep: true }
+  )
+})

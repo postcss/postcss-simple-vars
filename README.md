@@ -180,6 +180,10 @@ Left unknown variables in CSS and do not throw an error. Default is `false`.
 Set value only for variables from this object.
 Other variables will not be changed. It is useful for PostCSS plugin developers.
 
+### `keep`
+
+Keep variables as is and not delete them. Default is `false`.
+
 ## Messages
 
 This plugin passes `result.messages` for each variable:
