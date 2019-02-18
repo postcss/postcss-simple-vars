@@ -42,16 +42,6 @@
     "extends": "eslint-config-postcss/es5",
     "rules": {
       "func-style": "off"
-    },
-    "overrides": [
-      {
-        "files": [
-          "*.test.js"
-        ],
-        "rules": {
-          "jest/expect-expect": "off"
-        }
-      }
-    ]
+    }
   }
 }
