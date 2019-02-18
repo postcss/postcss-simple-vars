@@ -1,6 +1,9 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.0.2
+* Add `keep` option (by Mikhail Novikov).
+
 ## 5.0.1
 * Remove test files from npm package.
 
