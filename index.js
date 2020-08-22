@@ -1,7 +1,5 @@
-var postcss = require('postcss')
-
 function definition (variables, node, opts) {
-  var name = node.prop.slice(1)
+  let name = node.prop.slice(1)
   variables[name] = node.value
 
   if (!opts.keep) {
@@ -26,7 +24,7 @@ function variable (variables, node, str, name, opts, result) {
     return str
   }
 
-  var fix = opts.unknown(node, name, result)
+  let fix = opts.unknown(node, name, result)
 
   if (fix) {
     return fix
@@ -36,13 +34,13 @@ function variable (variables, node, str, name, opts, result) {
 }
 
 function simpleSyntax (variables, node, str, opts, result) {
-  return str.replace(/(^|[^\w])\$([\w\d-_]+)/g, function (_, bef, name) {
+  return str.replace(/(^|[^\w])\$([\w\d-_]+)/g, (_, bef, name) => {
     return bef + variable(variables, node, '$' + name, name, opts, result)
   })
 }
 
 function inStringSyntax (variables, node, str, opts, result) {
-  return str.replace(/\$\(\s*([\w\d-_]+)\s*\)/g, function (all, name) {
+  return str.replace(/\$\(\s*([\w\d-_]+)\s*\)/g, (all, name) => {
     return variable(variables, node, all, name, opts, result)
   })
 }
@@ -54,111 +52,112 @@ function bothSyntaxes (variables, node, str, opts, result) {
 }
 
 function repeat (value, callback) {
-  var oldValue
-  var newValue = value
+  let oldValue
+  let newValue = value
   do {
     oldValue = newValue
     newValue = callback(oldValue)
-  } while (newValue !== oldValue && newValue.indexOf('$') !== -1)
+  } while (newValue !== oldValue && newValue.includes('$'))
   return newValue
 }
 
 function declValue (variables, node, opts, result) {
-  node.value = repeat(node.value, function (value) {
+  node.value = repeat(node.value, value => {
     return bothSyntaxes(variables, node, value, opts, result)
   })
 }
 
 function declProp (variables, node, opts, result) {
-  node.prop = repeat(node.prop, function (value) {
+  node.prop = repeat(node.prop, value => {
     return inStringSyntax(variables, node, value, opts, result)
   })
 }
 
 function ruleSelector (variables, node, opts, result) {
-  node.selector = repeat(node.selector, function (value) {
+  node.selector = repeat(node.selector, value => {
     return bothSyntaxes(variables, node, value, opts, result)
   })
 }
 
 function atruleParams (variables, node, opts, result) {
-  node.params = repeat(node.params, function (value) {
+  node.params = repeat(node.params, value => {
     return bothSyntaxes(variables, node, value, opts, result)
   })
 }
 
 function comment (variables, node, opts, result) {
-  node.text = node.text
-    .replace(/<<\$\(\s*([\w\d-_]+)\s*\)>>/g, function (all, name) {
-      return variable(variables, node, all, name, opts, result)
-    })
+  node.text = node.text.replace(/<<\$\(\s*(\w+)\s*\)>>/g, (all, name) => {
+    return variable(variables, node, all, name, opts, result)
+  })
 }
 
-module.exports = postcss.plugin('postcss-simple-vars', function (opts) {
-  if (typeof opts === 'undefined') opts = { }
-
+module.exports = (opts = {}) => {
   if (!opts.unknown) {
-    opts.unknown = function (node, name) {
+    opts.unknown = (node, name) => {
       throw node.error('Undefined variable $' + name)
     }
   }
 
-  if (!opts.hasOwnProperty('keep')) {
+  if (typeof opts.keep === 'undefined') {
     opts.keep = false
   }
 
-  return function (css, result) {
-    var variables = { }
-    if (typeof opts.variables === 'function') {
-      variables = opts.variables()
-    } else if (typeof opts.variables === 'object') {
-      for (var i in opts.variables) variables[i] = opts.variables[i]
-    }
-
-    for (var name in variables) {
-      if (name[0] === '$') {
-        var fixed = name.slice(1)
-        variables[fixed] = variables[name]
-        delete variables[name]
+  return {
+    postcssPlugin: 'postcss-simple-vars',
+    Root (root, { result }) {
+      let variables = {}
+      if (typeof opts.variables === 'function') {
+        variables = opts.variables()
+      } else if (typeof opts.variables === 'object') {
+        for (let i in opts.variables) variables[i] = opts.variables[i]
       }
-    }
 
-    css.walk(function (node) {
-      if (node.type === 'decl') {
-        if (node.value.toString().indexOf('$') !== -1) {
-          declValue(variables, node, opts, result)
-        }
-        if (node.prop.indexOf('$(') !== -1) {
-          declProp(variables, node, opts, result)
-        } else if (node.prop[0] === '$') {
-          if (!opts.only) definition(variables, node, opts)
-        }
-      } else if (node.type === 'rule') {
-        if (node.selector.indexOf('$') !== -1) {
-          ruleSelector(variables, node, opts, result)
-        }
-      } else if (node.type === 'atrule') {
-        if (node.params && node.params.indexOf('$') !== -1) {
-          atruleParams(variables, node, opts, result)
-        }
-      } else if (node.type === 'comment') {
-        if (node.text.indexOf('$') !== -1) {
-          comment(variables, node, opts, result)
+      for (let name in variables) {
+        if (name[0] === '$') {
+          let fixed = name.slice(1)
+          variables[fixed] = variables[name]
+          delete variables[name]
         }
       }
-    })
 
-    Object.keys(variables).forEach(function (key) {
-      result.messages.push({
-        plugin: 'postcss-simple-vars',
-        type: 'variable',
-        name: key,
-        value: variables[key]
+      root.walk(node => {
+        if (node.type === 'decl') {
+          if (node.value.toString().includes('$')) {
+            declValue(variables, node, opts, result)
+          }
+          if (node.prop.includes('$(')) {
+            declProp(variables, node, opts, result)
+          } else if (node.prop[0] === '$') {
+            if (!opts.only) definition(variables, node, opts)
+          }
+        } else if (node.type === 'rule') {
+          if (node.selector.includes('$')) {
+            ruleSelector(variables, node, opts, result)
+          }
+        } else if (node.type === 'atrule') {
+          if (node.params && node.params.includes('$')) {
+            atruleParams(variables, node, opts, result)
+          }
+        } else if (node.type === 'comment') {
+          if (node.text.includes('$')) {
+            comment(variables, node, opts, result)
+          }
+        }
       })
-    })
 
-    if (opts.onVariables) {
-      opts.onVariables(variables)
+      Object.keys(variables).forEach(key => {
+        result.messages.push({
+          plugin: 'postcss-simple-vars',
+          type: 'variable',
+          name: key,
+          value: variables[key]
+        })
+      })
+
+      if (opts.onVariables) {
+        opts.onVariables(variables)
+      }
     }
   }
-})
+}
+module.exports.postcss = true

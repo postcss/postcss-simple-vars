@@ -1,8 +1,8 @@
-# PostCSS Simple Variables [![Build Status][ci-img]][ci]
+# PostCSS Simple Variables
 
-<img align="right" width="95" height="95"
+<img align="right" width="135" height="95"
      title="Philosopher’s stone, logo of PostCSS"
-     src="http://postcss.github.io/postcss/logo.svg">
+     src="https://postcss.org/logo-leftp.svg">
 
 [PostCSS] plugin for Sass-like variables.
 
@@ -14,23 +14,23 @@ $blue:   #056ef0;
 $column: 200px;
 
 .menu_link {
-    background: $blue;
-    width: $column;
+  background: $blue;
+  width: $column;
 }
 .menu {
-    width: calc(4 * $column);
-    margin-$(dir): 10px;
+  width: calc(4 * $column);
+  margin-$(dir): 10px;
 }
 ```
 
 ```css
 .menu_link {
-    background: #056ef0;
-    width: 200px;
+  background: #056ef0;
+  width: 200px;
 }
 .menu {
-    width: calc(4 * 200px);
-    margin-top: 10px;
+  width: calc(4 * 200px);
+  margin-top: 10px;
 }
 ```
 
@@ -43,8 +43,12 @@ Also you should look at [postcss-map] for big complicated configs.
 [postcss-custom-properties]:  https://github.com/postcss/postcss-custom-properties
 [postcss-map]:                https://github.com/pascalduez/postcss-map
 [PostCSS]:                    https://github.com/postcss/postcss
-[ci-img]:                     https://travis-ci.org/postcss/postcss-simple-vars.svg
-[ci]:                         https://travis-ci.org/postcss/postcss-simple-vars
+
+<a href="https://evilmartians.com/?utm_source=postcss-simple-vars">
+  <img src="https://evilmartians.com/badges/sponsored-by-evil-martians.svg"
+       alt="Sponsored by Evil Martians" width="236" height="54">
+</a>
+
 
 ## Interpolation
 
@@ -56,6 +60,7 @@ $prefix: my-company-widget
 $prefix { }
 $(prefix)_button { }
 ```
+
 
 ## Comments
 
@@ -76,31 +81,49 @@ compiles to:
 
 [mdcss]: https://github.com/jonathantneal/mdcss
 
+
 ## Escaping
 
 If you want to escape `$` in `content` property, use Unicode escape syntax.
 
 ```css
 .foo::before {
-    content: "\0024x";
+  content: "\0024x";
 }
 ```
 
+
 ## Usage
 
-```js
-postcss([ require('postcss-simple-vars') ])
+**Step 1:** Check you project for existed PostCSS config: `postcss.config.js`
+in the project root, `"postcss"` section in `package.json`
+or `postcss` in bundle config.
+
+If you do not use PostCSS, add it according to [official docs]
+and set this plugin in settings.
+
+**Step 2:** Add the plugin to plugins list:
+
+```diff
+module.exports = {
+  plugins: [
++   require('postcss-simple-vars'),
+    require('autoprefixer')
+  ]
+}
 ```
 
-See [PostCSS] docs for examples for your environment.
+[official docs]: https://github.com/postcss/postcss#usage
+
 
 ## Options
 
 Call plugin function to set options:
 
 ```js
-.pipe(postcss([ require('postcss-simple-vars')({ silent: true }) ]))
+    require('postcss-simple-vars')({ silent: true })
 ```
+
 
 ### `variables`
 
@@ -111,33 +134,32 @@ in common file:
 // config/colors.js
 
 module.exports = {
-    blue: '#056ef0'
+  blue: '#056ef0'
 }
 
-// gulpfile.js
+// postcss.config.js
 
-var colors = require('./config/colors');
-var vars   = require('postcss-simple-vars')
+const colors = require('./config/colors')
+const vars   = require('postcss-simple-vars')
 
-gulp.task('css', function () {
-     return gulp.src('./src/*.css')
-        .pipe(postcss([ vars({ variables: colors }) ]))
-        .pipe(gulp.dest('./dest'));
-});
+module.exports = {
+  plugins: [
+    require('postcss-simple-vars')({ variables: colors })
+  ]
+}
 ```
 
 You can set a function returning object, if you want to update default
 variables in webpack hot reload:
 
 ```js
-postcss([
-    vars({
-        variables: function () {
-            return require('./config/colors');
-        }
+    require('postcss-simple-vars')({
+      variables: function () {
+        return require('./config/colors');
+      }
     })
-])
 ```
+
 
 ### `onVariables`
 
@@ -146,15 +168,14 @@ an object representing the known variables, including those explicitly-declared
 by the [`variables`](#variables) option.
 
 ```js
-postcss([
-    vars({
-        onVariables: function (variables) {
-            console.log('CSS Variables');
-            console.log(JSON.stringify(variables, null, 2));
-        }
+    require('postcss-simple-vars')({
+      onVariables (variables) {
+        console.log('CSS Variables');
+        console.log(JSON.stringify(variables, null, 2));
+      }
     })
-])
 ```
+
 
 ### `unknown`
 
@@ -162,54 +183,56 @@ Callback on unknown variable name. It receives node instance, variable name
 and PostCSS Result object.
 
 ```js
-postcss([
-    vars({
-        unknown: function (node, name, result) {
-            node.warn(result, 'Unknown variable ' + name);
-        }
+    require('postcss-simple-vars')({
+      unknown (node, name, result) {
+        node.warn(result, 'Unknown variable ' + name);
+      }
     })
 ])
 ```
 
+
 ### `silent`
 
 Left unknown variables in CSS and do not throw an error. Default is `false`.
+
 
 ### `only`
 
 Set value only for variables from this object.
 Other variables will not be changed. It is useful for PostCSS plugin developers.
 
+
 ### `keep`
 
 Keep variables as is and not delete them. Default is `false`.
+
 
 ## Messages
 
 This plugin passes `result.messages` for each variable:
 
 ```js
-postcss([vars]).process('$one: 1; $two: 2').then(function (result) {
-    console.log(result.messages)
-})
+const result = await postcss([vars]).process('$one: 1; $two: 2')
+console.log(result.messages)
 ```
 
 will output:
 
 ```js
 [
-    {
-        plugin: 'postcss-simple-vars',
-        type: 'variable',
-        name: 'one'
-        value: '1'
-    },
-    {
-        plugin: 'postcss-simple-vars',
-        type: 'variable',
-        name: 'two'
-        value: '2'
-    }
+  {
+    plugin: 'postcss-simple-vars',
+    type: 'variable',
+    name: 'one'
+    value: '1'
+  },
+  {
+    plugin: 'postcss-simple-vars',
+    type: 'variable',
+    name: 'two'
+    value: '2'
+  }
 ]
 ```
 

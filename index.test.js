@@ -1,103 +1,95 @@
-var postcss = require('postcss')
+let postcss = require('postcss')
 
-var vars = require('./')
+let plugin = require('./')
 
 function run (input, output, opts) {
-  return postcss([vars(opts)]).process(input, { from: '/test.css' })
-    .then(function (result) {
-      expect(result.css).toEqual(output)
-      expect(result.warnings()).toHaveLength(0)
-      return result
-    })
+  let result = postcss([plugin(opts)]).process(input, { from: '/test.css' })
+  expect(result.css).toEqual(output)
+  expect(result.warnings()).toHaveLength(0)
+  return result
 }
 
-it('replaces variables in values', function () {
+it('replaces variables in values', () => {
   run(
     '$size: 10px;\na{ width: $size; height: $size }',
     'a{ width: 10px; height: 10px }'
   )
 })
 
-it('replaces vars in property names', function () {
+it('replaces vars in property names', () => {
   run('$prop: width; a{ $(prop): 1px }', 'a{ width: 1px }')
 })
 
-it('replaces vars inside property names', function () {
+it('replaces vars inside property names', () => {
   run('$dir: top; a{ margin-$(dir): 1px }', 'a{ margin-top: 1px }')
 })
 
-it('replaces vars in comments', function () {
+it('replaces vars in comments', () => {
   run('$prop: width; /* <<$(prop)>>: 1px */', '/* width: 1px */')
 })
 
-it('allows dashes and digits in variable name', function () {
+it('allows dashes and digits in variable name', () => {
   run('$a-b_10: 1;\na{ one: $a-b_10 a$(a-b_10) }', 'a{ one: 1 a1 }')
 })
 
-it('needs space before variable', function () {
+it('needs space before variable', () => {
   run('$size: 10px; a { width: one$size }', 'a { width: one$size }')
 })
 
-it('does not remove first symbol', function () {
+it('does not remove first symbol', () => {
   run('a{ a: 1 $a }', 'a{ a: 1 1 }', { variables: { a: 1 } })
 })
 
-it('allows to use in negative numbers', function () {
+it('allows to use in negative numbers', () => {
   run('a{ a: -$a }', 'a{ a: -1 }', { variables: { a: 1 } })
 })
 
-it('replaces multiple variables', function () {
+it('replaces multiple variables', () => {
   run('a{ a: $a $a }', 'a{ a: 1 1 }', { variables: { a: 1 } })
 })
 
-it('has second syntax for varibles', function () {
+it('has second syntax for varibles', () => {
   run('$size: 10; a { width: $(size)px }', 'a { width: 10px }')
 })
 
-it('replaces variables in selector', function () {
+it('replaces variables in selector', () => {
   run('$name: a; $name $(name)b { }', 'a ab { }')
 })
 
-it('replaces variables in at-rule params', function () {
+it('replaces variables in at-rule params', () => {
   run('$name: a; @at $name; @at $(name)b { }', '@at a; @at ab { }')
 })
 
-it('parses at-rule without params', function () {
+it('parses at-rule without params', () => {
   run('@atrule{}', '@atrule{}')
 })
 
-it('overrides variables', function () {
+it('overrides variables', () => {
   run(
     '$var: 1; a{ one: $var } b{ $var: 2; two: $var } c{ two: $var }',
     'a{ one: 1 } b{ two: 2 } c{ two: 2 }'
   )
 })
 
-it('throws an error on unknown variable', function () {
-  return new Promise(function (resolve) {
-    run('a{ width: -$size }').catch(function (e) {
-      expect(e.message).toEqual(
-        'postcss-simple-vars: /test.css:1:4: ' +
-                'Undefined variable $size'
-      )
-      resolve()
-    })
-  })
+it('throws an error on unknown variable', () => {
+  expect(() => run('a{ width: -$size }')).toThrow(
+    'postcss-simple-vars: /test.css:1:4: Undefined variable $size'
+  )
 })
 
-it('allows to silent errors', function () {
+it('allows to silent errors', () => {
   run('a{ width: $size }', 'a{ width: $size }', { silent: true })
 })
 
-it('gets variables from options', function () {
+it('gets variables from options', () => {
   run('a{ width: $one }', 'a{ width: 1 }', { variables: { one: 1 } })
 })
 
-it('works with any syntax in option', function () {
+it('works with any syntax in option', () => {
   run('a{ width: $one }', 'a{ width: 1 }', { variables: { $one: 1 } })
 })
 
-it('cans get variables only from option', function () {
+it('cans get variables only from option', () => {
   run(
     '$one: 2; $two: 2; a{ one: $one $two }',
     '$one: 2; $two: 2; a{ one: 1 $two }',
@@ -105,19 +97,17 @@ it('cans get variables only from option', function () {
   )
 })
 
-it('works with false value', function () {
+it('works with false value', () => {
   run('a{ zero: $zero }', 'a{ zero: 0 }', { variables: { zero: 0 } })
 })
 
-it('allows to use var in other vars', function () {
+it('allows to use var in other vars', () => {
   run('$one: 1; $two: $one 2; a{ value: $two }', 'a{ value: 1 2 }')
 })
 
-it('set default values by function', function () {
-  var value
-  var config = function () {
-    return { config: value }
-  }
+it('set default values by function', () => {
+  let value
+  let config = () => ({ config: value })
 
   value = 1
   run('a{ width: $config }', 'a{ width: 1 }', { variables: config })
@@ -126,75 +116,70 @@ it('set default values by function', function () {
   run('a{ width: $config }', 'a{ width: 2 }', { variables: config })
 })
 
-it('has callback for unknown variable', function () {
-  var result = []
-  var unknown = function (node, name) {
+it('has callback for unknown variable', () => {
+  let result = []
+  let unknown = (node, name) => {
     result.push([node.prop, name])
   }
 
-  run('a{width:$one}', 'a{width:$one}', { unknown: unknown })
+  run('a{width:$one}', 'a{width:$one}', { unknown })
   expect(result).toEqual([['width', 'one']])
 })
 
-it('has callback for exporting variables', function () {
-  return new Promise(function (resolve) {
-    run('$one: 1;', '', {
-      onVariables: function (variables) {
-        expect(variables.one).toEqual('1')
-        resolve()
-      }
-    })
+it('has callback for exporting variables', () => {
+  let result = []
+  run('$one: 1;', '', {
+    onVariables (variables) {
+      result.push(variables.one)
+    }
   })
+  expect(result).toEqual(['1'])
 })
 
-it('overrides unknown variable', function () {
-  var unknown = function () { return 'unknown' }
-  run('a{width:$one}', 'a{width:unknown}', { unknown: unknown })
+it('overrides unknown variable', () => {
+  let unknown = function () {
+    return 'unknown'
+  }
+  run('a{width:$one}', 'a{width:unknown}', { unknown })
 })
 
-it('supports nested vairables', function () {
+it('supports nested vairables', () => {
   run('$one: 1; $p: on; test: $($(p)e)', 'test: 1')
 })
 
-it('exports variables to messages', function () {
-  return run('$one: 1; $p: on;', '').then(function (result) {
-    expect(result.messages).toEqual([
-      {
-        plugin: 'postcss-simple-vars',
-        type: 'variable',
-        name: 'one',
-        value: '1'
-      },
-      {
-        plugin: 'postcss-simple-vars',
-        type: 'variable',
-        name: 'p',
-        value: 'on'
-      }
-    ])
-  })
+it('exports variables to messages', () => {
+  expect(run('$one: 1; $p: on;', '').messages).toEqual([
+    {
+      plugin: 'postcss-simple-vars',
+      type: 'variable',
+      name: 'one',
+      value: '1'
+    },
+    {
+      plugin: 'postcss-simple-vars',
+      type: 'variable',
+      name: 'p',
+      value: 'on'
+    }
+  ])
 })
 
-it('overrides default variables', function () {
-  var variables = { a: 1 }
+it('overrides default variables', () => {
+  let variables = { a: 1 }
   run('a: $a; $a: 2; b: $a;', 'a: 1; b: 2;', {
-    variables: variables
+    variables
   })
   expect(variables).toEqual({ a: 1 })
 })
 
-it('keep top level variables', function () {
-  return run(
-    '$a: 42; body { color: $a }',
-    '$a: 42; body { color: 42 }',
-    { keep: true }
-  )
+it('keep top level variables', () => {
+  run('$a: 42; body { color: $a }', '$a: 42; body { color: 42 }', {
+    keep: true
+  })
 })
 
-it('keep nested variables', function () {
-  return run(
-    'body { $a: 42; color: $a }',
-    'body { $a: 42; color: 42 }',
-    { keep: true }
-  )
+it('keep nested variables', () => {
+  run('body { $a: 42; color: $a }', 'body { $a: 42; color: 42 }', {
+    keep: true
+  })
 })
