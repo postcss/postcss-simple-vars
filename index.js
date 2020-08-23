@@ -104,7 +104,7 @@ module.exports = (opts = {}) => {
 
   return {
     postcssPlugin: 'postcss-simple-vars',
-    Root (root, { result }) {
+    prepare (result) {
       let variables = {}
       if (typeof opts.variables === 'function') {
         variables = opts.variables()
@@ -120,8 +120,8 @@ module.exports = (opts = {}) => {
         }
       }
 
-      root.walk(node => {
-        if (node.type === 'decl') {
+      return {
+        Declaration (node) {
           if (node.value.toString().includes('$')) {
             declValue(variables, node, opts, result)
           }
@@ -130,32 +130,36 @@ module.exports = (opts = {}) => {
           } else if (node.prop[0] === '$') {
             if (!opts.only) definition(variables, node, opts)
           }
-        } else if (node.type === 'rule') {
+        },
+        Rule (node) {
           if (node.selector.includes('$')) {
             ruleSelector(variables, node, opts, result)
           }
-        } else if (node.type === 'atrule') {
+        },
+        AtRule (node) {
           if (node.params && node.params.includes('$')) {
             atruleParams(variables, node, opts, result)
           }
-        } else if (node.type === 'comment') {
+        },
+        Comment (node) {
           if (node.text.includes('$')) {
             comment(variables, node, opts, result)
           }
+        },
+        Exit () {
+          Object.keys(variables).forEach(key => {
+            result.messages.push({
+              plugin: 'postcss-simple-vars',
+              type: 'variable',
+              name: key,
+              value: variables[key]
+            })
+          })
+
+          if (opts.onVariables) {
+            opts.onVariables(variables)
+          }
         }
-      })
-
-      Object.keys(variables).forEach(key => {
-        result.messages.push({
-          plugin: 'postcss-simple-vars',
-          type: 'variable',
-          name: key,
-          value: variables[key]
-        })
-      })
-
-      if (opts.onVariables) {
-        opts.onVariables(variables)
       }
     }
   }

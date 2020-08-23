@@ -36,7 +36,7 @@
     "eslint-plugin-standard": "^4.0.1",
     "eslint-plugin-unicorn": "^21.0.0",
     "husky": "^4.2.5",
-    "jest": "^26.4.1",
+    "jest": "^26.4.2",
     "jest-ci": "^0.1.1",
     "lint-staged": "^10.2.11",
     "postcss": "postcss/postcss#ose",
