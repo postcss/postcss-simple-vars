@@ -4376,7 +4376,7 @@ postcss@^7.0.14, postcss@^7.0.6:
 
 postcss@postcss/postcss#ose:
   version "7.0.32"
-  resolved "https://codeload.github.com/postcss/postcss/tar.gz/d2ba2c18d308044e698ed16497dad20f67d34e7a"
+  resolved "https://codeload.github.com/postcss/postcss/tar.gz/ae412e7258dc1abf199e78fba352be083a80656b"
   dependencies:
     colorette "^1.2.1"
     nanoid "^3.1.12"

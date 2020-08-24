@@ -146,7 +146,7 @@ module.exports = (opts = {}) => {
             comment(variables, node, opts, result)
           }
         },
-        Exit () {
+        RootExit () {
           Object.keys(variables).forEach(key => {
             result.messages.push({
               plugin: 'postcss-simple-vars',
