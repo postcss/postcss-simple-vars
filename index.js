@@ -104,7 +104,7 @@ module.exports = (opts = {}) => {
 
   return {
     postcssPlugin: 'postcss-simple-vars',
-    prepare (result) {
+    Root (root, { result }) {
       let variables = {}
       if (typeof opts.variables === 'function') {
         variables = opts.variables()
@@ -120,46 +120,41 @@ module.exports = (opts = {}) => {
         }
       }
 
-      return {
-        Declaration (node) {
-          if (node.value.toString().includes('$')) {
+      root.walk(node => {
+        if (node.type === 'decl') {
+          if (node.value.includes('$')) {
             declValue(variables, node, opts, result)
           }
-          if (node.prop.includes('$(')) {
-            declProp(variables, node, opts, result)
-          } else if (node.prop[0] === '$') {
+          if (node.prop[0] === '$' && node.prop[1] !== '(') {
             if (!opts.only) definition(variables, node, opts)
+          } else if (node.prop.includes('$(')) {
+            declProp(variables, node, opts, result)
           }
-        },
-        Rule (node) {
+        } else if (node.type === 'rule') {
           if (node.selector.includes('$')) {
             ruleSelector(variables, node, opts, result)
           }
-        },
-        AtRule (node) {
+        } else if (node.type === 'atrule') {
           if (node.params && node.params.includes('$')) {
             atruleParams(variables, node, opts, result)
           }
-        },
-        Comment (node) {
+        } else if (node.type === 'comment') {
           if (node.text.includes('$')) {
             comment(variables, node, opts, result)
           }
-        },
-        RootExit () {
-          Object.keys(variables).forEach(key => {
-            result.messages.push({
-              plugin: 'postcss-simple-vars',
-              type: 'variable',
-              name: key,
-              value: variables[key]
-            })
-          })
-
-          if (opts.onVariables) {
-            opts.onVariables(variables)
-          }
         }
+      })
+
+      Object.keys(variables).forEach(key => {
+        result.messages.push({
+          plugin: 'postcss-simple-vars',
+          type: 'variable',
+          name: key,
+          value: variables[key]
+        })
+      })
+      if (opts.onVariables) {
+        opts.onVariables(variables)
       }
     }
   }
