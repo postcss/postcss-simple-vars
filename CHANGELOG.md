@@ -1,6 +1,10 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.0
+* Moved to PostCSS 8.
+* Moved `postcss` to `peerDependencies`.
+
 ## 5.0.2
 * Add `keep` option (by Mikhail Novikov).
 
