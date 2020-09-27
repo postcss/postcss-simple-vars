@@ -104,7 +104,7 @@ module.exports = (opts = {}) => {
 
   return {
     postcssPlugin: 'postcss-simple-vars',
-    Root (root, { result }) {
+    Once (root, { result }) {
       let variables = {}
       if (typeof opts.variables === 'function') {
         variables = opts.variables()
