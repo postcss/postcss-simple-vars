@@ -91,6 +91,16 @@ function comment (variables, node, opts, result) {
   })
 }
 
+function isIgnore (node) {
+  if (node.type === 'atrule' && node.name === 'define-mixin') {
+    return true
+  } else if (node.parent) {
+    return isIgnore(node.parent)
+  } else {
+    return false
+  }
+}
+
 module.exports = (opts = {}) => {
   if (!opts.unknown) {
     opts.unknown = (node, name) => {
@@ -121,6 +131,7 @@ module.exports = (opts = {}) => {
       }
 
       root.walk(node => {
+        if (isIgnore(node)) return
         if (node.type === 'decl') {
           if (node.value.includes('$')) {
             declValue(variables, node, opts, result)

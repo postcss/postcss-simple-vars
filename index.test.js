@@ -183,3 +183,7 @@ it('keep nested variables', () => {
     keep: true
   })
 })
+
+it('ignores @define-mixin', () => {
+  run('@define-mixin a $b { color: $b }', '@define-mixin a $b { color: $b }')
+})
