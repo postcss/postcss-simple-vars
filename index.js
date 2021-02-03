@@ -1,3 +1,5 @@
+const IGNORE = Symbol('ignore')
+
 function definition (variables, node, opts) {
   let name = node.prop.slice(1)
   variables[name] = node.value
@@ -8,6 +10,8 @@ function definition (variables, node, opts) {
 }
 
 function variable (variables, node, str, name, opts, result) {
+  if (isIgnore(node, name)) return str
+
   if (opts.only) {
     if (typeof opts.only[name] !== 'undefined') {
       return opts.only[name]
@@ -91,11 +95,23 @@ function comment (variables, node, opts, result) {
   })
 }
 
-function isIgnore (node) {
-  if (node.type === 'atrule' && node.name === 'define-mixin') {
+function mixin (helpers, node) {
+  let name = node.params.split(/\s/, 1)[0]
+  let vars = node.params.slice(name.length).trim()
+
+  if (vars.length) {
+    node[IGNORE] = helpers.list.comma(vars).map(str => {
+      let arg = str.split(':', 1)[0]
+      return arg.slice(1).trim()
+    })
+  }
+}
+
+function isIgnore (node, value) {
+  if (node[IGNORE] && node[IGNORE].includes(value)) {
     return true
   } else if (node.parent) {
-    return isIgnore(node.parent)
+    return isIgnore(node.parent, value)
   } else {
     return false
   }
@@ -144,8 +160,6 @@ module.exports = (opts = {}) => {
           }
         },
         Declaration (node, { result }) {
-          if (isIgnore(node)) return
-
           if (node.value.includes('$')) {
             declValue(variables, node, opts, result)
           }
@@ -156,17 +170,19 @@ module.exports = (opts = {}) => {
           }
         },
         Comment (node, { result }) {
-          if (!isIgnore(node) && node.text.includes('$')) {
+          if (node.text.includes('$')) {
             comment(variables, node, opts, result)
           }
         },
-        AtRule (node, { result }) {
-          if (!isIgnore(node) && node.params && node.params.includes('$')) {
-            atruleParams(variables, node, opts, result)
+        AtRule (node, helpers) {
+          if (node.name === 'define-mixin') {
+            mixin(helpers, node)
+          } else if (node.params && node.params.includes('$')) {
+            atruleParams(variables, node, opts, helpers.result)
           }
         },
         Rule (node, { result }) {
-          if (!isIgnore(node) && node.selector.includes('$')) {
+          if (node.selector.includes('$')) {
             ruleSelector(variables, node, opts, result)
           }
         }

@@ -187,3 +187,10 @@ it('keep nested variables', () => {
 it('ignores @define-mixin', () => {
   run('@define-mixin a $b { color: $b }', '@define-mixin a $b { color: $b }')
 })
+
+it('works within @define-mixin', () => {
+  run(
+    '$a: 1; $b: 2; @define-mixin a $b { color: $b; width: $a }',
+    '@define-mixin a $b { color: $b; width: 1 }'
+  )
+})
