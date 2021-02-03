@@ -6,7 +6,7 @@
 
 [PostCSS] plugin for Sass-like variables.
 
-You can use variables inside values, selectors and at-rule’s parameters.
+You can use variables inside values, selectors and at-rule parameters.
 
 ```pcss
 $dir:    top;
@@ -37,7 +37,7 @@ $column: 200px;
 If you want be closer to W3C spec,
 you should use [postcss-custom-properties] and [postcss-at-rules-variables] plugins.
 
-Also you should look at [postcss-map] for big complicated configs.
+Look at [postcss-map] for big complicated configs.
 
 [postcss-at-rules-variables]: https://github.com/GitScrum/postcss-at-rules-variables
 [postcss-custom-properties]:  https://github.com/postcss/postcss-custom-properties
@@ -52,7 +52,7 @@ Also you should look at [postcss-map] for big complicated configs.
 
 ## Interpolation
 
-There is special syntax if you want to use variable inside CSS words:
+There is special syntax for using variables inside CSS words:
 
 ```pcss
 $prefix: my-company-widget
@@ -64,8 +64,8 @@ $(prefix)_button { }
 
 ## Comments
 
-You could use variables in comments too (for example, to generate special
-[mdcss] comments). But syntax for comment variables is different to separate
+You can use variables in comments too (for example, to generate special
+[mdcss] comments). Syntax for comment variables is different to separate
 them from PreCSS code examples:
 
 ```pcss
@@ -84,7 +84,7 @@ compiles to:
 
 ## Escaping
 
-If you want to escape `$` in `content` property, use Unicode escape syntax.
+If you want to escape `$` in the `content` property, use Unicode escape syntax.
 
 ```css
 .foo::before {
@@ -101,7 +101,7 @@ If you want to escape `$` in `content` property, use Unicode escape syntax.
 npm install --save-dev postcss postcss-simple-vars
 ```
 
-**Step 2:** Check you project for existed PostCSS config: `postcss.config.js`
+**Step 2:** Check your project for existing PostCSS config: `postcss.config.js`
 in the project root, `"postcss"` section in `package.json`
 or `postcss` in bundle config.
 
@@ -134,7 +134,7 @@ Call plugin function to set options:
 ### `variables`
 
 Set default variables. It is useful to store colors or other constants
-in common file:
+in a common file:
 
 ```js
 // config/colors.js
@@ -155,7 +155,7 @@ module.exports = {
 }
 ```
 
-You can set a function returning object, if you want to update default
+You can use a function return an object, if you want to update default
 variables in webpack hot reload:
 
 ```js
@@ -170,7 +170,7 @@ variables in webpack hot reload:
 ### `onVariables`
 
 Callback invoked once all variables in css are known. The callback receives
-an object representing the known variables, including those explicitly-declared
+an object representing the known variables, including those explicitly declared
 by the [`variables`](#variables) option.
 
 ```js
@@ -185,7 +185,7 @@ by the [`variables`](#variables) option.
 
 ### `unknown`
 
-Callback on unknown variable name. It receives node instance, variable name
+Callback on unknown variable name. It receives the node instance, variable name
 and PostCSS Result object.
 
 ```js
@@ -200,7 +200,7 @@ and PostCSS Result object.
 
 ### `silent`
 
-Left unknown variables in CSS and do not throw an error. Default is `false`.
+Leave unknown variables in CSS and do not throw an error. Default is `false`.
 
 
 ### `only`
@@ -242,5 +242,5 @@ will output:
 ]
 ```
 
-You can get access to this variables in `result.messages` also
-in any plugin goes after `postcss-simple-vars`.
+You can access this in `result.messages` and
+in any plugin that included after `postcss-simple-vars`.
