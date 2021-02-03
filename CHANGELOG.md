@@ -1,6 +1,9 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.0.3
+* Fixed compatibility with `@define-mixin` (by Sam Pullman).
+
 ## 6.0.2
 * Fixed compatibility with `postcss-mixins`.
 
