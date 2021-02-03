@@ -114,12 +114,12 @@ module.exports = (opts = {}) => {
 
   return {
     postcssPlugin: 'postcss-simple-vars',
-    Once (root, { result }) {
+    prepare () {
       let variables = {}
       if (typeof opts.variables === 'function') {
         variables = opts.variables()
       } else if (typeof opts.variables === 'object') {
-        for (let i in opts.variables) variables[i] = opts.variables[i]
+        variables = { ...opts.variables }
       }
 
       for (let name in variables) {
@@ -129,10 +129,23 @@ module.exports = (opts = {}) => {
           delete variables[name]
         }
       }
+      return {
+        OnceExit (_, { result }) {
+          Object.keys(variables).forEach(key => {
+            result.messages.push({
+              plugin: 'postcss-simple-vars',
+              type: 'variable',
+              name: key,
+              value: variables[key]
+            })
+          })
+          if (opts.onVariables) {
+            opts.onVariables(variables)
+          }
+        },
+        Declaration (node, { result }) {
+          if (isIgnore(node)) return
 
-      root.walk(node => {
-        if (isIgnore(node)) return
-        if (node.type === 'decl') {
           if (node.value.includes('$')) {
             declValue(variables, node, opts, result)
           }
@@ -141,31 +154,22 @@ module.exports = (opts = {}) => {
           } else if (node.prop.includes('$(')) {
             declProp(variables, node, opts, result)
           }
-        } else if (node.type === 'rule') {
-          if (node.selector.includes('$')) {
-            ruleSelector(variables, node, opts, result)
-          }
-        } else if (node.type === 'atrule') {
-          if (node.params && node.params.includes('$')) {
-            atruleParams(variables, node, opts, result)
-          }
-        } else if (node.type === 'comment') {
-          if (node.text.includes('$')) {
+        },
+        Comment (node, { result }) {
+          if (!isIgnore(node) && node.text.includes('$')) {
             comment(variables, node, opts, result)
           }
+        },
+        AtRule (node, { result }) {
+          if (!isIgnore(node) && node.params && node.params.includes('$')) {
+            atruleParams(variables, node, opts, result)
+          }
+        },
+        Rule (node, { result }) {
+          if (!isIgnore(node) && node.selector.includes('$')) {
+            ruleSelector(variables, node, opts, result)
+          }
         }
-      })
-
-      Object.keys(variables).forEach(key => {
-        result.messages.push({
-          plugin: 'postcss-simple-vars',
-          type: 'variable',
-          name: key,
-          value: variables[key]
-        })
-      })
-      if (opts.onVariables) {
-        opts.onVariables(variables)
       }
     }
   }
