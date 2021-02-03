@@ -1,3 +1,5 @@
+const IGNORE = Symbol('ignore')
+
 function definition (variables, node, opts) {
   let name = node.prop.slice(1)
   variables[name] = node.value
@@ -8,6 +10,8 @@ function definition (variables, node, opts) {
 }
 
 function variable (variables, node, str, name, opts, result) {
+  if (isIgnore(node, name)) return str
+
   if (opts.only) {
     if (typeof opts.only[name] !== 'undefined') {
       return opts.only[name]
@@ -91,11 +95,23 @@ function comment (variables, node, opts, result) {
   })
 }
 
-function isIgnore (node) {
-  if (node.type === 'atrule' && node.name === 'define-mixin') {
+function mixin (helpers, node) {
+  let name = node.params.split(/\s/, 1)[0]
+  let vars = node.params.slice(name.length).trim()
+
+  if (vars.length) {
+    node[IGNORE] = helpers.list.comma(vars).map(str => {
+      let arg = str.split(':', 1)[0]
+      return arg.slice(1).trim()
+    })
+  }
+}
+
+function isIgnore (node, value) {
+  if (node[IGNORE] && node[IGNORE].includes(value)) {
     return true
   } else if (node.parent) {
-    return isIgnore(node.parent)
+    return isIgnore(node.parent, value)
   } else {
     return false
   }
@@ -114,12 +130,12 @@ module.exports = (opts = {}) => {
 
   return {
     postcssPlugin: 'postcss-simple-vars',
-    Once (root, { result }) {
+    prepare () {
       let variables = {}
       if (typeof opts.variables === 'function') {
         variables = opts.variables()
       } else if (typeof opts.variables === 'object') {
-        for (let i in opts.variables) variables[i] = opts.variables[i]
+        variables = { ...opts.variables }
       }
 
       for (let name in variables) {
@@ -129,10 +145,21 @@ module.exports = (opts = {}) => {
           delete variables[name]
         }
       }
-
-      root.walk(node => {
-        if (isIgnore(node)) return
-        if (node.type === 'decl') {
+      return {
+        OnceExit (_, { result }) {
+          Object.keys(variables).forEach(key => {
+            result.messages.push({
+              plugin: 'postcss-simple-vars',
+              type: 'variable',
+              name: key,
+              value: variables[key]
+            })
+          })
+          if (opts.onVariables) {
+            opts.onVariables(variables)
+          }
+        },
+        Declaration (node, { result }) {
           if (node.value.includes('$')) {
             declValue(variables, node, opts, result)
           }
@@ -141,31 +168,24 @@ module.exports = (opts = {}) => {
           } else if (node.prop.includes('$(')) {
             declProp(variables, node, opts, result)
           }
-        } else if (node.type === 'rule') {
-          if (node.selector.includes('$')) {
-            ruleSelector(variables, node, opts, result)
-          }
-        } else if (node.type === 'atrule') {
-          if (node.params && node.params.includes('$')) {
-            atruleParams(variables, node, opts, result)
-          }
-        } else if (node.type === 'comment') {
+        },
+        Comment (node, { result }) {
           if (node.text.includes('$')) {
             comment(variables, node, opts, result)
           }
+        },
+        AtRule (node, helpers) {
+          if (node.name === 'define-mixin') {
+            mixin(helpers, node)
+          } else if (node.params && node.params.includes('$')) {
+            atruleParams(variables, node, opts, helpers.result)
+          }
+        },
+        Rule (node, { result }) {
+          if (node.selector.includes('$')) {
+            ruleSelector(variables, node, opts, result)
+          }
         }
-      })
-
-      Object.keys(variables).forEach(key => {
-        result.messages.push({
-          plugin: 'postcss-simple-vars',
-          type: 'variable',
-          name: key,
-          value: variables[key]
-        })
-      })
-      if (opts.onVariables) {
-        opts.onVariables(variables)
       }
     }
   }
