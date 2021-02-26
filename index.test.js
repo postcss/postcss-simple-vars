@@ -194,3 +194,10 @@ it('works within @define-mixin', () => {
     '@define-mixin a $b { color: $b; width: 1 }'
   )
 })
+
+it('works inside function-like declarations', () => {
+  run(
+    '$a: 1; $b: 2; a{ color: a-fn($a nested($b)); }',
+    'a{ color: a-fn(1 nested(2)); }'
+  )
+})
