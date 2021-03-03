@@ -1,13 +1,38 @@
-let postcss = require('postcss')
+const postcss = require('postcss')
 
-let plugin = require('./')
+const plugin = require('./')
 
-function run (input, output, opts) {
-  let result = postcss([plugin(opts)]).process(input, { from: '/test.css' })
-  expect(result.css).toEqual(output)
+function checkResult (result, expected) {
+  expect(result.css).toEqual(expected)
   expect(result.warnings()).toHaveLength(0)
   return result
 }
+
+function runWithPlugins (plugins, input, output) {
+  let result = postcss(plugins).process(input, { from: '/test.css' })
+  return checkResult(result, output)
+}
+
+function run (input, output, opts) {
+  let result = postcss([plugin(opts)]).process(input, { from: '/test.css' })
+  return checkResult(result, output)
+}
+
+it('works with postcss-mixin variables', () => {
+  runWithPlugins(
+    [plugin(), require('postcss-mixins')],
+    '$b: 1; @define-mixin b $a: $b {width: $a; height: $b;}\n.a{@mixin b;}',
+    '.a{width: 1;height: 1;}'
+  )
+})
+
+it('works with postcss-for', () => {
+  runWithPlugins(
+    [plugin(), require('postcss-for')],
+    '$a: 1; $i: 5; @for $i from 1 to 3 {.b-$i {width: calc($i + $a);}}',
+    '.b-1 {width: calc(1 + 1);} .b-2 {width: calc(2 + 1);} .b-3 {width: calc(3 + 1);}'
+  )
+})
 
 it('replaces variables in values', () => {
   run(
