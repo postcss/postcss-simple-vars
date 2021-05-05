@@ -42,6 +42,14 @@ it('works with postcss-each', () => {
   )
 })
 
+it('works with postcss-hexrgba', () => {
+  runWithPlugins(
+    [plugin(), require('postcss-hexrgba')],
+    '$color-red: #FF0000; .a { color: rgba($color-red,0.10); }',
+    '.a { color: rgba(255,0,0,0.10); }'
+  )
+})
+
 it('replaces variables in values', () => {
   run(
     '$size: 10px;\na{ width: $size; height: $size }',

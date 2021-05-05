@@ -46,6 +46,7 @@
     "postcss": "^8.2.4",
     "postcss-each": "^1.0.0",
     "postcss-for": "^2.1.1",
+    "postcss-hexrgba": "^2.0.1",
     "postcss-mixins": "^7.0.3",
     "postcss-sharec-config": "^0.2.2"
   },
