@@ -92,6 +92,23 @@ If you want to escape `$` in the `content` property, use Unicode escape syntax.
 }
 ```
 
+If you want to use e.g. `:` in a selector variable, use the corresponding unicode escape sequence:
+
+```css
+/* Given */
+$selector: .my-component[data-emoji="\U0001f389"]\u003Adisabled;
+
+$selector {
+  width: 1px;
+}
+
+/* Generates */
+.my-component[data-emoji="🎉"]:disabled {
+  width: 1px;
+}
+```
+
+Note: Use `\u` for 4-digit sequences and `\U` for 8-digit sequences.
 
 ## Usage
 
