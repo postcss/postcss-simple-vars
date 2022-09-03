@@ -37,22 +37,16 @@ function variable (variables, node, str, name, opts, result) {
   return str
 }
 
-function transformBackslashSequences (value) {
-  if (typeof value !== 'string') return value
+const UNICODE_8_CODE = /(?<=[^\\]|^)\\U([0-9abcdefABCDEF]{8})/g
+const UNICODE_4_CODE = /(?<=[^\\]|^)\\u([0-9abcdefABCDEF]{4})/g
 
-  return (
-    value
-      // Unicode 8-digit code support (\Uxxxxxxxx)
-      .replace(/(?<=[^\\]|^)\\U([0-9abcdefABCDEF]{8})/g, (_, cp) =>
-        String.fromCodePoint(`0x${cp}`)
-      )
-      // Unicode 4-digit code support (\uxxxx)
-      .replace(/(?<=[^\\]|^)\\u([0-9abcdefABCDEF]{4})/g, (_, cp) =>
-        String.fromCodePoint(`0x${cp}`)
-      )
-      // Backslash
-      .replace(/\\\\/g, '\\')
-  )
+function transformBackslashSequences(value) {
+  if (typeof value !== 'string') return value
+  if (!value.includes('\\')) return value
+  return value
+    .replace(UNICODE_8_CODE, (_, cp) => String.fromCodePoint(`0x${cp}`))
+    .replace(UNICODE_4_CODE, (_, cp) => String.fromCodePoint(`0x${cp}`))
+    .replace(/\\\\/g, '\\')
 }
 
 function simpleSyntax (variables, node, str, opts, result) {
