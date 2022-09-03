@@ -77,6 +77,24 @@ it('allows to use in negative numbers', () => {
   run('a{ a: -$a }', 'a{ a: -1 }', { variables: { a: 1 } })
 })
 
+it('transforms unicode escapes', () => {
+  run(
+    String.raw`$selector: .my-component[data-emoji="\U0001F389"]\u003Adisabled\u003Ahover; $selector { width: 1px }`,
+    '.my-component[data-emoji="🎉"]:disabled:hover { width: 1px }'
+  )
+})
+
+it('does not transform escaped backslashes', () => {
+  run(
+    String.raw`$selector: .my-component[data-emoji="\\U0001F389"]\\u003Adisabled\\u003Ahover; $selector { width: 1px }`,
+    String.raw`.my-component[data-emoji="\U0001F389"]\u003Adisabled\u003Ahover { width: 1px }`
+  )
+  run(
+    String.raw`$selector: .my-component[data-emoji="\\\\U0001F389"]\\\\u003Adisabled\\\\u003Ahover; $selector { width: 1px }`,
+    String.raw`.my-component[data-emoji="\\U0001F389"]\\u003Adisabled\\u003Ahover { width: 1px }`
+  )
+})
+
 it('replaces multiple variables', () => {
   run('a{ a: $a $a }', 'a{ a: 1 1 }', { variables: { a: 1 } })
 })

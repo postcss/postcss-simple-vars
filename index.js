@@ -2,7 +2,7 @@ const IGNORE = Symbol('ignore')
 
 function definition (variables, node, opts) {
   let name = node.prop.slice(1)
-  variables[name] = node.value
+  variables[name] = transformBackslashSequences(node.value)
 
   if (!opts.keep) {
     node.remove()
@@ -35,6 +35,26 @@ function variable (variables, node, str, name, opts, result) {
   }
 
   return str
+}
+
+function transformBackslashSequences (value) {
+  if (typeof value !== 'string') return value
+
+  return (
+    value
+      // Unicode 8-digit code support (\Uxxxxxxxx)
+      // eslint-disable-next-line security/detect-unsafe-regex
+      .replace(/(?<=[^\\]|^)\\U([0-9abcdefABCDEF]{8})/g, (_, cp) =>
+        String.fromCodePoint(`0x${cp}`)
+      )
+      // Unicode 4-digit code support (\uxxxx)
+      // eslint-disable-next-line security/detect-unsafe-regex
+      .replace(/(?<=[^\\]|^)\\u([0-9abcdefABCDEF]{4})/g, (_, cp) =>
+        String.fromCodePoint(`0x${cp}`)
+      )
+      // Backslash
+      .replace(/\\\\/g, '\\')
+  )
 }
 
 function simpleSyntax (variables, node, str, opts, result) {
@@ -140,10 +160,11 @@ module.exports = (opts = {}) => {
 
       for (let name in variables) {
         if (name[0] === '$') {
-          let fixed = name.slice(1)
-          variables[fixed] = variables[name]
-          delete variables[name]
+          name = name.slice(1)
+          variables[name] = variables[`$${name}`]
+          delete variables[`$${name}`]
         }
+        variables[name] = transformBackslashSequences(variables[name])
       }
       return {
         OnceExit (_, { result }) {
