@@ -43,12 +43,10 @@ function transformBackslashSequences (value) {
   return (
     value
       // Unicode 8-digit code support (\Uxxxxxxxx)
-      // eslint-disable-next-line security/detect-unsafe-regex
       .replace(/(?<=[^\\]|^)\\U([0-9abcdefABCDEF]{8})/g, (_, cp) =>
         String.fromCodePoint(`0x${cp}`)
       )
       // Unicode 4-digit code support (\uxxxx)
-      // eslint-disable-next-line security/detect-unsafe-regex
       .replace(/(?<=[^\\]|^)\\u([0-9abcdefABCDEF]{4})/g, (_, cp) =>
         String.fromCodePoint(`0x${cp}`)
       )
