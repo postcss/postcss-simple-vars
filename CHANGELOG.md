@@ -1,6 +1,11 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 7.0
+* Added escape sequences support (by @FelixZY).
+* Removed Node.js 12 support.
+* Removed Node.js 10 support.
+
 ## 6.0.3
 * Fixed compatibility with `@define-mixin` (by Sam Pullman).
 
