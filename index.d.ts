@@ -29,7 +29,7 @@ declare module 'postcss-simple-vars' {
      * @interface ISimpleVarsArgument
      */
     export interface ISimpleVarsArgument extends ISimpleVarsBase {
-      variables: IArgument
+      variables?: IArgument
     }
 
     /**
@@ -92,7 +92,7 @@ declare module 'postcss-simple-vars' {
    * @param {simpleVars.ISimpleVarsArgument} arg
    * @returns {*}
    */
-  function simpleVars(arg: simpleVars.ISimpleVarsArgument): any
+  function simpleVars(arg?: simpleVars.ISimpleVarsArgument): any
 
   /**
    * Exported function
