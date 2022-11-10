@@ -32,7 +32,8 @@ test('works with postcss-for', () => {
   runWithPlugins(
     [plugin(), require('postcss-for')],
     '$a: 1; $i: 5; @for $i from 1 to 3 {.b-$i {width: calc($i + $a);}}',
-    '.b-1 {width: calc(1 + 1);} .b-2 {width: calc(2 + 1);} .b-3 {width: calc(3 + 1);}'
+    '.b-1 {width: calc(1 + 1);} .b-2 {width: calc(2 + 1);} ' +
+      '.b-3 {width: calc(3 + 1);}'
   )
 })
 
@@ -40,7 +41,7 @@ test('works with postcss-each', () => {
   runWithPlugins(
     [require('postcss-each')({ plugins: { afterEach: plugin() } })],
     '@each $n, $w in (a, b, c), (1, 2, 3) {.a-$n {width: $w;}}',
-    '.a-a {width: 1;}\n.a-b {width: 2;}\n.a-c {width: 3;}'
+    '.a-a {width: 1;}.a-b {width: 2;}.a-c {width: 3;}'
   )
 })
 
