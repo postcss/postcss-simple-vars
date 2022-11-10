@@ -1,6 +1,9 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 7.0.1
+* Fixed types (by @Kaciras).
+
 ## 7.0
 * Added escape sequences support (by @FelixZY).
 * Removed Node.js 12 support.
