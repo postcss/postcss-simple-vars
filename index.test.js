@@ -41,7 +41,7 @@ test('works with postcss-each', () => {
   runWithPlugins(
     [require('postcss-each')({ plugins: { afterEach: plugin() } })],
     '@each $n, $w in (a, b, c), (1, 2, 3) {.a-$n {width: $w;}}',
-    '.a-a {width: 1;}.a-b {width: 2;}.a-c {width: 3;}'
+    '.a-a {width: 1;}\n.a-b {width: 2;}\n.a-c {width: 3;}'
   )
 })
 
