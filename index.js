@@ -159,17 +159,16 @@ module.exports = (opts = {}) => {
         variables[name] = transformBackslashSequences(variables[name])
       }
       return {
-        OnceExit (_, { result }) {
-          Object.keys(variables).forEach(key => {
-            result.messages.push({
-              plugin: 'postcss-simple-vars',
-              type: 'variable',
-              name: key,
-              value: variables[key]
-            })
-          })
-          if (opts.onVariables) {
-            opts.onVariables(variables)
+        AtRule (node, helpers) {
+          if (node.name === 'define-mixin') {
+            mixin(helpers, node)
+          } else if (node.params && node.params.includes('$')) {
+            atruleParams(variables, node, opts, helpers.result)
+          }
+        },
+        Comment (node, { result }) {
+          if (node.text.includes('$')) {
+            comment(variables, node, opts, result)
           }
         },
         Declaration (node, { result }) {
@@ -182,16 +181,17 @@ module.exports = (opts = {}) => {
             declProp(variables, node, opts, result)
           }
         },
-        Comment (node, { result }) {
-          if (node.text.includes('$')) {
-            comment(variables, node, opts, result)
-          }
-        },
-        AtRule (node, helpers) {
-          if (node.name === 'define-mixin') {
-            mixin(helpers, node)
-          } else if (node.params && node.params.includes('$')) {
-            atruleParams(variables, node, opts, helpers.result)
+        OnceExit (_, { result }) {
+          Object.keys(variables).forEach(key => {
+            result.messages.push({
+              name: key,
+              plugin: 'postcss-simple-vars',
+              type: 'variable',
+              value: variables[key]
+            })
+          })
+          if (opts.onVariables) {
+            opts.onVariables(variables)
           }
         },
         Rule (node, { result }) {

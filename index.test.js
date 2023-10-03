@@ -205,15 +205,15 @@ test('supports nested vairables', () => {
 test('exports variables to messages', () => {
   equal(run('$one: 1; $p: on;', '').messages, [
     {
+      name: 'one',
       plugin: 'postcss-simple-vars',
       type: 'variable',
-      name: 'one',
       value: '1'
     },
     {
+      name: 'p',
       plugin: 'postcss-simple-vars',
       type: 'variable',
-      name: 'p',
       value: 'on'
     }
   ])
