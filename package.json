@@ -15,7 +15,9 @@
   "repository": "postcss/postcss-simple-vars",
   "scripts": {
     "unit": "uvu . '\\.test\\.js$'",
-    "test": "c8 pnpm unit && eslint ."
+    "test:coverage": "c8 pnpm unit",
+    "test:lint": "eslint .",
+    "test": "pnpm run /^test:/"
   },
   "engines": {
     "node": ">=14.0"
