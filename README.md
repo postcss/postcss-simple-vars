@@ -9,8 +9,8 @@
 You can use variables inside values, selectors and at-rule parameters.
 
 ```pcss
-$dir:    top;
-$blue:   #056ef0;
+$dir: top;
+$blue: #056ef0;
 $column: 200px;
 
 .menu_link {
@@ -40,15 +40,15 @@ you should use [postcss-custom-properties] and [postcss-at-rules-variables] plug
 Look at [postcss-map] for big complicated configs.
 
 [postcss-at-rules-variables]: https://github.com/GitScrum/postcss-at-rules-variables
-[postcss-custom-properties]:  https://github.com/postcss/postcss-custom-properties
-[postcss-map]:                https://github.com/pascalduez/postcss-map
-[PostCSS]:                    https://github.com/postcss/postcss
+[postcss-custom-properties]: https://github.com/postcss/postcss-custom-properties
+[postcss-map]: https://github.com/pascalduez/postcss-map
+[PostCSS]: https://github.com/postcss/postcss
 
-<a href="https://evilmartians.com/?utm_source=postcss-simple-vars">
-  <img src="https://evilmartians.com/badges/sponsored-by-evil-martians.svg"
-       alt="Sponsored by Evil Martians" width="236" height="54">
-</a>
+---
 
+<img src="https://cdn.evilmartians.com/badges/logo-no-label.svg" alt="" width="22" height="16" />  PostCSS Safe Parser is built by <b><a href="https://evilmartians.com/">Evil Martians</a></b>, an American design and engineering consultancy for <b>developer tools, AI, and cybersecurity startups</b>.
+
+---
 
 ## Interpolation
 
@@ -57,10 +57,11 @@ There is special syntax for using variables inside CSS words:
 ```pcss
 $prefix: my-company-widget
 
-$prefix { }
-$(prefix)_button { }
+$prefix {
+}
+$(prefix)_button {
+}
 ```
-
 
 ## Comments
 
@@ -81,14 +82,13 @@ compiles to:
 
 [mdcss]: https://github.com/jonathantneal/mdcss
 
-
 ## Escaping
 
 If you want to escape `$` in the `content` property, use Unicode escape syntax.
 
 ```css
 .foo::before {
-  content: "\0024x";
+  content: '\0024x';
 }
 ```
 
@@ -96,14 +96,14 @@ If you want to use e.g. `:` in a selector variable, use the corresponding unicod
 
 ```css
 /* Given */
-$selector: .my-component[data-emoji="\U0001f389"]\u003Adisabled;
+$selector: .my-component[data-emoji= '\U0001f389']\u003Adisabled;
 
 $selector {
   width: 1px;
 }
 
 /* Generates */
-.my-component[data-emoji="🎉"]:disabled {
+.my-component[data-emoji='🎉']:disabled {
   width: 1px;
 }
 ```
@@ -138,15 +138,13 @@ module.exports = {
 
 [official docs]: https://github.com/postcss/postcss#usage
 
-
 ## Options
 
 Call plugin function to set options:
 
 ```js
-    require('postcss-simple-vars')({ silent: true })
+require('postcss-simple-vars')({ silent: true })
 ```
-
 
 ### `variables`
 
@@ -163,12 +161,10 @@ module.exports = {
 // postcss.config.js
 
 const colors = require('./config/colors')
-const vars   = require('postcss-simple-vars')
+const vars = require('postcss-simple-vars')
 
 module.exports = {
-  plugins: [
-    require('postcss-simple-vars')({ variables: colors })
-  ]
+  plugins: [require('postcss-simple-vars')({ variables: colors })]
 }
 ```
 
@@ -176,13 +172,12 @@ You can use a function return an object, if you want to update default
 variables in webpack hot reload:
 
 ```js
-    require('postcss-simple-vars')({
-      variables: function () {
-        return require('./config/colors');
-      }
-    })
+require('postcss-simple-vars')({
+  variables: function () {
+    return require('./config/colors')
+  }
+})
 ```
-
 
 ### `onVariables`
 
@@ -191,14 +186,13 @@ an object representing the known variables, including those explicitly declared
 by the [`variables`](#variables) option.
 
 ```js
-    require('postcss-simple-vars')({
-      onVariables (variables) {
-        console.log('CSS Variables');
-        console.log(JSON.stringify(variables, null, 2));
-      }
-    })
+require('postcss-simple-vars')({
+  onVariables(variables) {
+    console.log('CSS Variables')
+    console.log(JSON.stringify(variables, null, 2))
+  }
+})
 ```
-
 
 ### `unknown`
 
@@ -214,22 +208,18 @@ and PostCSS Result object.
 ])
 ```
 
-
 ### `silent`
 
 Leave unknown variables in CSS and do not throw an error. Default is `false`.
-
 
 ### `only`
 
 Set value only for variables from this object.
 Other variables will not be changed. It is useful for PostCSS plugin developers.
 
-
 ### `keep`
 
 Keep variables as is and not delete them. Default is `false`.
-
 
 ## Messages
 
