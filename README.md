@@ -46,7 +46,7 @@ Look at [postcss-map] for big complicated configs.
 
 ---
 
-<img src="https://cdn.evilmartians.com/badges/logo-no-label.svg" alt="" width="22" height="16" />  PostCSS Safe Parser is built by <b><a href="https://evilmartians.com/">Evil Martians</a></b>, an American design and engineering consultancy for <b>developer tools, AI, and cybersecurity startups</b>.
+<img src="https://cdn.evilmartians.com/badges/logo-no-label.svg" alt="" width="22" height="16" />  PostCSS Simple Variables is built by <b><a href="https://evilmartians.com/">Evil Martians</a></b>, an American design and engineering consultancy for <b>developer tools, AI, and cybersecurity startups</b>.
 
 ---
 
@@ -55,7 +55,7 @@ Look at [postcss-map] for big complicated configs.
 There is special syntax for using variables inside CSS words:
 
 ```pcss
-$prefix: my-company-widget
+$prefix: my-company-widget;
 
 $prefix {
 }
@@ -200,12 +200,11 @@ Callback on unknown variable name. It receives the node instance, variable name
 and PostCSS Result object.
 
 ```js
-    require('postcss-simple-vars')({
-      unknown (node, name, result) {
-        node.warn(result, 'Unknown variable ' + name);
-      }
-    })
-])
+require('postcss-simple-vars')({
+  unknown(node, name, result) {
+    node.warn(result, 'Unknown variable ' + name)
+  }
+})
 ```
 
 ### `silent`
