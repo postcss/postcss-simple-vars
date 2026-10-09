@@ -257,4 +257,27 @@ test('works inside function-like declarations', () => {
   )
 })
 
+test('rejects inherited object members as undefined variables', () => {
+  throws(() => {
+    postcss([plugin()]).process('a { color: $constructor }', {
+      from: '/test.css'
+    }).css
+  }, /Undefined variable/)
+})
+
+test('keeps inherited names unchanged in silent mode', () => {
+  run('a { color: $toString }', 'a { color: $toString }', { silent: true })
+})
+
+test('ignores inherited members of only', () => {
+  run('a { color: $constructor }', 'a { color: $constructor }', { only: {} })
+})
+
+test('allows explicitly defined object member names', () => {
+  run('$constructor: red; a { color: $constructor }', 'a { color: red }')
+  run('a { color: $toString }', 'a { color: blue }', {
+    only: { toString: 'blue' }
+  })
+})
+
 test.run()
