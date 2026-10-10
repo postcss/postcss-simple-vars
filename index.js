@@ -13,14 +13,20 @@ function variable (variables, node, str, name, opts, result) {
   if (isIgnore(node, name)) return str
 
   if (opts.only) {
-    if (typeof opts.only[name] !== 'undefined') {
+    if (
+      Object.prototype.hasOwnProperty.call(opts.only, name) &&
+      typeof opts.only[name] !== 'undefined'
+    ) {
       return opts.only[name]
     }
 
     return str
   }
 
-  if (typeof variables[name] !== 'undefined') {
+  if (
+    Object.prototype.hasOwnProperty.call(variables, name) &&
+    typeof variables[name] !== 'undefined'
+  ) {
     return variables[name]
   }
 
